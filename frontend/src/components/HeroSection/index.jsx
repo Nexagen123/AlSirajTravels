@@ -218,15 +218,15 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <div className="siraj-card overflow-hidden p-3 lg:ml-auto lg:max-w-[560px]">
+            {/* <div className="siraj-card overflow-hidden p-3 lg:ml-auto lg:max-w-[560px]">
               <div className="relative aspect-[6/4] overflow-hidden rounded-2xl bg-slate-100">
                 <img
                   src={travelImages.airport}
                   alt="Airport departure lounge"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/78 via-black/20 to-transparent" />
-                <div className="absolute left-5 right-5 bottom-5 text-white">
+                <div className="absolute inset-0 bg-linear-to-t from-black/78 via-black/20 to-transparent" /> */}
+                {/* <div className="absolute left-5 right-5 bottom-5 text-white"> */}
                   {/* <p className="siraj-kicker text-(--siraj-gold-light)!">
                     Group Travel Desk
                   </p>
@@ -236,7 +236,7 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2.5 pt-3">
+              {/* <div className="grid grid-cols-3 gap-2.5 pt-3">
                 {[
                   ["50k+", "Seats"],
                   ["24/7", "Support"],
@@ -251,10 +251,10 @@ export default function HeroSection() {
                     </p>
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-        </div>
+              </div> */}
+            {/* </div> */}
+          {/* </div> */}
+        {/* </div> */}
       </section>
 
       <section className="relative z-20 bg-white py-10 md:py-12">

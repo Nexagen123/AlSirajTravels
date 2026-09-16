@@ -144,13 +144,11 @@ const Login = ({ onLogin }) => {
       {/* ── TOP FLOATING BRAND LOGO ── */}
       <Link
         to="/"
-        className="siraj-logo-frame absolute top-5 left-5 lg:top-8 lg:left-8 z-50 block rounded-2xl px-3 py-2"
+        className="siraj-logo-frame siraj-login-logo-frame absolute top-5 left-5 lg:top-8 lg:left-8 z-50"
       >
         <img
-          style={{ height: "52px" }}
           src={logo}
           alt="New Al Siraj Travels"
-          className="h-10 w-auto object-contain"
         />
       </Link>
 

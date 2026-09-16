@@ -195,7 +195,7 @@ const Airline = () => {
 
   return (
     <>
-      <PageMeta title="Add New Airline - Qafla-e-Sagir Travel" description="Manage and add airlines for Qafla-e-Sagir Travel" />
+      <PageMeta title="Add New Airline - New Al Siraj Travel" description="Manage and add airlines for New Al Siraj Travel" />
 
       <div className="mb-6">
         <PageBreadCrumb pageTitle="Add New Airline" />

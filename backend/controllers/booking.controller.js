@@ -27,10 +27,10 @@ const getAmmerMilatSupplierAccountName = () =>
 const isLocalGroup = (groupId) => mongoose.Types.ObjectId.isValid(groupId);
 const normalizeGroupId = (groupId) => groupId?.toString();
 const Qafla_e_Sagir_BOOKING_CONTACT = {
-  agentName: "Qafla-e-Sagir",
-  agencyName: "Qafla-e-Sagir",
+  agentName: "New Al Siraj",
+  agencyName: "New Al Siraj",
   email: "qaflaesagir@gmail.com",
-  mobile: "0300-6666344",
+  mobile: "0306-6001334",
 };
 
 /**

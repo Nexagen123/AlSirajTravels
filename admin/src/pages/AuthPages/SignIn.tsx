@@ -6,8 +6,8 @@ export default function SignIn() {
   return (
     <>
       <PageMeta
-        title="Qafla-e-Sagir Travel SignIn Dashboard"
-        description="This is Admin SignIn Dashboard page for Qafla-e-Sagir Travel"
+        title="New Al Siraj Travel SignIn Dashboard"
+        description="This is Admin SignIn Dashboard page for New Al Siraj Travel"
       />
       <AuthLayout>
         <SignInForm />

@@ -165,10 +165,10 @@ const getPasswordResetEmailHTML = (resetLink, userName) => {
             </ul>
           </div>
           <p>If you have any questions or concerns, please contact our support team.</p>
-          <p>Best regards,<br><strong>Qafla-e-Sagir Travel  Team</strong></p>
+          <p>Best regards,<br><strong>New Al Siraj Travel  Team</strong></p>
         </div>
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} Qafla-e-Sagir Travel . All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} New Al Siraj Travel . All rights reserved.</p>
           <p>This is an automated message, please do not reply to this email.</p>
         </div>
       </div>
@@ -195,13 +195,13 @@ export const sendPasswordResetEmail = async (
 
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel ",
+        name: "New Al Siraj Travel ",
         address: process.env.EMAIL_USER,
       },
       to: email,
-      subject: "Password Reset Request - Qafla-e-Sagir Travel ",
+      subject: "Password Reset Request - New Al Siraj Travel ",
       html: getPasswordResetEmailHTML(resetLink, userName),
-      text: `Hello ${userName},\n\nWe received a request to reset your password.\n\nPlease click the following link to reset your password:\n${resetLink}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this email.\n\nBest regards,\nQafla-e-Sagir Travel  Team`,
+      text: `Hello ${userName},\n\nWe received a request to reset your password.\n\nPlease click the following link to reset your password:\n${resetLink}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this email.\n\nBest regards,\nNew Al Siraj Travel  Team`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -323,11 +323,11 @@ const getCredentialsEmailHTML = (
     <body>
       <div class="container">
         <div class="header">
-          <h1>🎉 Welcome to Qafla-e-Sagir Travel !</h1>
+          <h1>🎉 Welcome to New Al Siraj Travel !</h1>
         </div>
         <div class="content">
           <p>Hello <strong>${userName}</strong>,</p>
-          <p>Welcome to Qafla-e-Sagir Travel ! Your agency account has been created successfully.</p>
+          <p>Welcome to New Al Siraj Travel ! Your agency account has been created successfully.</p>
           <p><strong>Company:</strong> ${companyName}</p>
           
           <div class="credentials-box">
@@ -364,10 +364,10 @@ const getCredentialsEmailHTML = (
           </div>
 
           <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
-          <p>Best regards,<br><strong>Qafla-e-Sagir Travel  Team</strong></p>
+          <p>Best regards,<br><strong>New Al Siraj Travel  Team</strong></p>
         </div>
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} Qafla-e-Sagir Travel . All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} New Al Siraj Travel . All rights reserved.</p>
           <p>This is an automated message, please do not reply to this email.</p>
         </div>
       </div>
@@ -405,11 +405,11 @@ export const sendCredentialsEmail = async (
 
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel ",
+        name: "New Al Siraj Travel ",
         address: process.env.EMAIL_USER,
       },
       to: email,
-      subject: "Your Agent Credentials - Qafla-e-Sagir Travel ",
+      subject: "Your Agent Credentials - New Al Siraj Travel ",
       html: getCredentialsEmailHTML(
         agentCode,
         email,
@@ -417,7 +417,7 @@ export const sendCredentialsEmail = async (
         userName,
         companyName,
       ),
-      text: `Hello ${userName},\n\nWelcome to Qafla-e-Sagir Travel ! Your agency account has been created successfully.\n\nCompany: ${companyName}\n\nYour Login Credentials:\nAgent Code: ${agentCode}\nEmail: ${email}\nPassword: ${password}\n\nLogin URL: ${process.env.FRONTEND_URL || "https://qaflaesagirb2bportal.qaflaesagir.com"}\n\nSecurity Tips:\n- Keep your credentials safe and secure\n- Do not share your password with anyone\n- We recommend changing your password after first login\n\nBest regards,\nQafla-e-Sagir Travel `,
+      text: `Hello ${userName},\n\nWelcome to New Al Siraj Travel ! Your agency account has been created successfully.\n\nCompany: ${companyName}\n\nYour Login Credentials:\nAgent Code: ${agentCode}\nEmail: ${email}\nPassword: ${password}\n\nLogin URL: ${process.env.FRONTEND_URL || "https://qaflaesagirb2bportal.qaflaesagir.com"}\n\nSecurity Tips:\n- Keep your credentials safe and secure\n- Do not share your password with anyone\n- We recommend changing your password after first login\n\nBest regards,\nNew Al Siraj Travel `,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -553,7 +553,7 @@ const getAdminCredentialsEmailHTML = (
     <body>
       <div class="container">
         <div class="header">
-          <h1>Welcome to Qafla-e-Sagir Travel</h1>
+          <h1>Welcome to New Al Siraj Travel</h1>
         </div>
         <div class="content">
           <p>Hello <strong>${userName}</strong>,</p>
@@ -586,10 +586,10 @@ const getAdminCredentialsEmailHTML = (
             </ul>
           </div>
 
-          <p>Best regards,<br><strong>Qafla-e-Sagir Travel Team</strong></p>
+          <p>Best regards,<br><strong>New Al Siraj Travel Team</strong></p>
         </div>
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} Qafla-e-Sagir Travel. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} New Al Siraj Travel. All rights reserved.</p>
           <p>This is an automated message, please do not reply to this email.</p>
         </div>
       </div>
@@ -621,18 +621,18 @@ export const sendAdminCredentialsEmail = async (
     const loginUrl = getAdminCredentialsLoginUrl();
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel ",
+        name: "New Al Siraj Travel ",
         address: process.env.EMAIL_USER,
       },
       to: email,
-      subject: "Your Admin Portal Credentials - Qafla-e-Sagir Travel",
+      subject: "Your Admin Portal Credentials - New Al Siraj Travel",
       html: getAdminCredentialsEmailHTML(
         email,
         password,
         userName,
         companyName,
       ),
-      text: `Hello ${userName},\n\nYour admin portal sub-user account credentials are ready.\n\nCompany: ${companyName}\n\nYour Login Credentials:\nEmail: ${email}\nPassword: ${password}\n\nLogin URL: ${loginUrl}\n\nSecurity Tips:\n- Keep your credentials safe and secure\n- Do not share your password with anyone\n- We recommend changing your password after first login\n\nBest regards,\nQafla-e-Sagir Travel`,
+      text: `Hello ${userName},\n\nYour admin portal sub-user account credentials are ready.\n\nCompany: ${companyName}\n\nYour Login Credentials:\nEmail: ${email}\nPassword: ${password}\n\nLogin URL: ${loginUrl}\n\nSecurity Tips:\n- Keep your credentials safe and secure\n- Do not share your password with anyone\n- We recommend changing your password after first login\n\nBest regards,\nNew Al Siraj Travel`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -690,7 +690,7 @@ export const getAgentRegistrationEmailHTML = (name = "Agent") => {
             <tr>
               <td style="background:#012A36; padding:25px; text-align:center;">
                 <h1 style="color:#ffffff; margin:0; font-size:24px;">
-                  Qafla-e-Sagir Travel
+                  New Al Siraj Travel
                 </h1>
               </td>
             </tr>
@@ -706,7 +706,7 @@ export const getAgentRegistrationEmailHTML = (name = "Agent") => {
                 </p>
 
                 <p style="font-size:16px; line-height:1.6;">
-                  Thank you for registering as an agent with Qafla-e-Sagir Travel.
+                  Thank you for registering as an agent with New Al Siraj Travel.
                 </p>
 
                 <p style="font-size:16px; line-height:1.6;">
@@ -721,14 +721,14 @@ export const getAgentRegistrationEmailHTML = (name = "Agent") => {
 
                 <p style="font-size:16px; line-height:1.6; margin-bottom:0;">
                   Best regards,<br />
-                  <strong>Qafla-e-Sagir Travel Team</strong>
+                  <strong>New Al Siraj Travel Team</strong>
                 </p>
               </td>
             </tr>
 
             <tr>
               <td style="background:#f1f1f1; padding:15px; text-align:center; color:#777777; font-size:13px;">
-                © ${new Date().getFullYear()} Qafla-e-Sagir Travel. All rights reserved.
+                © ${new Date().getFullYear()} New Al Siraj Travel. All rights reserved.
               </td>
             </tr>
 
@@ -746,7 +746,7 @@ export const sendAgentRegistrationEmail = async (email, name = "Agent") => {
 
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel",
+        name: "New Al Siraj Travel",
         address: process.env.EMAIL_USER,
       },
       to: email,
@@ -754,14 +754,14 @@ export const sendAgentRegistrationEmail = async (email, name = "Agent") => {
       html: getAgentRegistrationEmailHTML(name),
       text: `Hello ${name},
 
-Thank you for registering as an agent with Qafla-e-Sagir Travel.
+Thank you for registering as an agent with New Al Siraj Travel.
 
 Your account has been created successfully, but it is currently waiting for admin approval.
 
 Please wait for the admin to activate your account. Once your account is activated, you will be able to log in and use your agent portal.
 
 Best regards,
-Qafla-e-Sagir Travel Team`,
+New Al Siraj Travel Team`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -831,7 +831,7 @@ export const getBookingStatusUpdateEmailHTML = ({
             <tr>
               <td style="background:#012A36; padding:25px; text-align:center;">
                 <h1 style="color:#ffffff; margin:0; font-size:24px;">
-                  Qafla-e-Sagir Travel
+                  New Al Siraj Travel
                 </h1>
               </td>
             </tr>
@@ -893,14 +893,14 @@ export const getBookingStatusUpdateEmailHTML = ({
 
                 <p style="font-size:16px; line-height:1.6; margin-bottom:0;">
                   Best regards,<br />
-                  <strong>Qafla-e-Sagir Travel Team</strong>
+                  <strong>New Al Siraj Travel Team</strong>
                 </p>
               </td>
             </tr>
 
             <tr>
               <td style="background:#f1f1f1; padding:15px; text-align:center; color:#777777; font-size:13px;">
-                © ${new Date().getFullYear()} Qafla-e-Sagir Travel. All rights reserved.
+                © ${new Date().getFullYear()} New Al Siraj Travel. All rights reserved.
               </td>
             </tr>
 
@@ -926,7 +926,7 @@ export const sendBookingStatusUpdateEmail = async ({
 
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel",
+        name: "New Al Siraj Travel",
         address: process.env.EMAIL_USER,
       },
       to: email,
@@ -948,7 +948,7 @@ New Status: ${newStatus}
 ${notes ? `Notes: ${notes}` : ""}
 
 Best regards,
-Qafla-e-Sagir Travel Team`,
+New Al Siraj Travel Team`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -1025,7 +1025,7 @@ export const getAgentStatusUpdateEmailHTML = ({
             <tr>
               <td style="background:#012A36; padding:25px; text-align:center;">
                 <h1 style="color:#ffffff; margin:0; font-size:24px;">
-                  Qafla-e-Sagir Travel
+                  New Al Siraj Travel
                 </h1>
               </td>
             </tr>
@@ -1086,14 +1086,14 @@ export const getAgentStatusUpdateEmailHTML = ({
 
                 <p style="font-size:16px; line-height:1.6; margin-bottom:0;">
                   Best regards,<br />
-                  <strong>Qafla-e-Sagir Travel Team</strong>
+                  <strong>New Al Siraj Travel Team</strong>
                 </p>
               </td>
             </tr>
 
             <tr>
               <td style="background:#f1f1f1; padding:15px; text-align:center; color:#777777; font-size:13px;">
-                © ${new Date().getFullYear()} Qafla-e-Sagir Travel. All rights reserved.
+                © ${new Date().getFullYear()} New Al Siraj Travel. All rights reserved.
               </td>
             </tr>
 
@@ -1124,7 +1124,7 @@ export const sendAgentStatusUpdateEmail = async ({
 
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel",
+        name: "New Al Siraj Travel",
         address: process.env.EMAIL_USER,
       },
       to: email,
@@ -1152,7 +1152,7 @@ ${
 }
 
 Best regards,
-Qafla-e-Sagir Travel Team`,
+New Al Siraj Travel Team`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -1201,7 +1201,7 @@ export const getAdminAgencyRegistrationEmailHTML = ({
             <tr>
               <td style="background:#012A36; padding:25px; text-align:center;">
                 <h1 style="color:#ffffff; margin:0; font-size:24px;">
-                  Qafla-e-Sagir Travel
+                  New Al Siraj Travel
                 </h1>
               </td>
             </tr>
@@ -1298,14 +1298,14 @@ export const getAdminAgencyRegistrationEmailHTML = ({
 
                 <p style="font-size:16px; line-height:1.6; margin-bottom:0;">
                   Best regards,<br />
-                  <strong>Qafla-e-Sagir Travel System</strong>
+                  <strong>New Al Siraj Travel System</strong>
                 </p>
               </td>
             </tr>
 
             <tr>
               <td style="background:#f1f1f1; padding:15px; text-align:center; color:#777777; font-size:13px;">
-                © ${new Date().getFullYear()} Qafla-e-Sagir Travel. All rights reserved.
+                © ${new Date().getFullYear()} New Al Siraj Travel. All rights reserved.
               </td>
             </tr>
 
@@ -1345,7 +1345,7 @@ export const sendAdminAgencyRegistrationEmail = async ({
 
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel",
+        name: "New Al Siraj Travel",
         address: process.env.EMAIL_USER,
       },
       to: adminEmail,
@@ -1374,7 +1374,7 @@ Status: ${status || "Pending"}
 Please review this agency account and activate it if approved.
 
 Best regards,
-Qafla-e-Sagir Travel System`,
+New Al Siraj Travel System`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -1541,7 +1541,7 @@ export const getBookingConfirmationEmailHTML = ({
   <body>
     <div class="container">
       <div class="header">
-        <h1>Qafla-e-Sagir Travel</h1>
+        <h1>New Al Siraj Travel</h1>
       </div>
       <div class="content">
         <h2>🎉 Booking Confirmation</h2>
@@ -1551,7 +1551,7 @@ export const getBookingConfirmationEmailHTML = ({
         </p>
         
         <p style="font-size:16px; line-height:1.6;">
-          Thank you for booking with Qafla-e-Sagir Travel! Your Umrah package booking has been confirmed.
+          Thank you for booking with New Al Siraj Travel! Your Umrah package booking has been confirmed.
         </p>
 
         <div class="booking-details">
@@ -1618,11 +1618,11 @@ export const getBookingConfirmationEmailHTML = ({
         </p>
         <p style="font-size:16px; line-height:1.6;">
           Best regards,<br />
-          <strong>Qafla-e-Sagir Travel Team</strong>
+          <strong>New Al Siraj Travel Team</strong>
         </p>
       </div>
       <div class="footer">
-        <p>© ${new Date().getFullYear()} Qafla-e-Sagir Travel. All rights reserved.</p>
+        <p>© ${new Date().getFullYear()} New Al Siraj Travel. All rights reserved.</p>
         <p>This is an automated message, please do not reply to this email.</p>
       </div>
     </div>
@@ -1653,7 +1653,7 @@ export const sendBookingConfirmationEmail = async ({
 
     const mailOptions = {
       from: {
-        name: "Qafla-e-Sagir Travel",
+        name: "New Al Siraj Travel",
         address: process.env.EMAIL_USER,
       },
       to: email,
@@ -1671,7 +1671,7 @@ export const sendBookingConfirmationEmail = async ({
 
 Hello ${name},
 
-Thank you for booking with Qafla-e-Sagir Travel! Your Umrah package booking has been confirmed.
+Thank you for booking with New Al Siraj Travel! Your Umrah package booking has been confirmed.
 
 Booking Reference: ${bookingNumber}
 Package Name: ${packageName}
@@ -1689,7 +1689,7 @@ Next Steps:
 - We'll send you updates about your booking status
 
 Best regards,
-Qafla-e-Sagir Travel Team`,
+New Al Siraj Travel Team`,
     };
 
     const info = await transporter.sendMail(mailOptions);

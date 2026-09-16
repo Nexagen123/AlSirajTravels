@@ -423,9 +423,9 @@ const buildGroupCopyText = (group: ApiGroup): string => {
     const footer =
         `*ALL GROUPS ARE NON REFUNDABLE AND NON CHANGEABLE*
 =======================
-Qafla-e-Sagir Travel
-Mobile: 0300-6666344
-Address: Office no 1, National Hotel, Near MCB Bank, Sargodha road, Faisalabad.
+New Al Siraj Travel
+Mobile: 0306-6001334
+Address: Plaza 44 First Floor Main Boulevard Garden Town Phase 3, Gujranwala
 Website: https://qaflaesagirb2bportal.qaflaesagir.com/`;
 
     return [header, ...lines, "=======================", footer].join("\n");

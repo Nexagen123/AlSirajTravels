@@ -59,18 +59,19 @@ export default function SignInForm() {
         <div
             className="flex items-center justify-center min-h-screen w-full"
             style={{
-                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/admin-portal/images/carousel/carousel-02.png)',
+                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/admin-portal/images/carousel/bgaeroplane.webp)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'bottom',
                 backgroundRepeat: 'no-repeat',
+                opacity: '100'
             }}
         >
             <div className="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-xl">
                 {/* Logo */}
                 <div className="flex justify-center mb-6">
-                    <div className="w-25 h-25 bg-white rounded-full flex items-center justify-center">
-                        <img src={logo} alt="Logo" className="rounded-full" />
-                    </div>
+                    {/* <div className="admin-logo-badge"> */}
+                        <img className="h-34!" src={logo} alt="New Al Siraj Travels" />
+                    {/* </div> */}
                 </div>
 
                 {/* Title */}

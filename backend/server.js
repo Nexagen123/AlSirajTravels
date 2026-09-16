@@ -153,7 +153,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Qafla-e-Sagir API is running");
+  res.send("New Al Siraj API is running");
 });
 
 const PORT = process.env.PORT || 8016;

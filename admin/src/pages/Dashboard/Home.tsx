@@ -209,9 +209,9 @@ function buildCopyText(groups: UnifiedGroup[]): string {
   const footer =
     `*ALL GROUPS ARE NON REFUNDABLE AND NON CHANGEABLE*
 =======================
-Qafla-e-Sagir Travel
-Mobile: 0300-6666344
-Address: Office no 1, National Hotel, Near MCB Bank, Sargodha road, Faisalabad.
+New Al Siraj Travel
+Mobile: 0306-6001334
+Address: Plaza 44 First Floor Main Boulevard Garden Town Phase 3, Gujranwala
 Website: https://qaflaesagirb2bportal.qaflaesagir.com/`;
 
   return [header, ...lines, "=======================", footer].join("\n");
@@ -356,8 +356,8 @@ export default function Home() {
   return (
     <>
       <PageMeta
-        title="Dashboard | Qafla-e-Sagir Travel"
-        description="Dashboard overview for Qafla-e-Sagir Travel"
+        title="Dashboard | New Al Siraj Travel"
+        description="Dashboard overview for New Al Siraj Travel"
       />
 
       {hasPermission(user, "view_dashboard") &&
@@ -379,7 +379,7 @@ export default function Home() {
                     <span>Dashboard</span>
                   </div>
                   <h1 className="text-2xl font-black text-white sm:text-3xl">
-                    Qafla-e-Sagir Admin
+                    New Al Siraj Admin
                   </h1>
                   <p className="mt-1 max-w-2xl text-sm text-white/75">
                     Monitor bookings, group inventory, margins, and agent activity from one work-focused view.

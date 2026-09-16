@@ -167,7 +167,7 @@ const renderPDFContent = (
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.setTextColor(255, 255, 255);
-    doc.text("Qafla-e-Sagir", 30, 12);
+    doc.text("New Al Siraj", 30, 12);
 
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
@@ -375,7 +375,7 @@ const renderPDFContent = (
       doc.setTextColor(148, 163, 184);
       doc.line(15, pageHeight - 12, pageWidth - 15, pageHeight - 12);
       doc.text(
-        "Qafla-e-Sagir | Premium Service | All Rights Reserved",
+        "New Al Siraj | Premium Service | All Rights Reserved",
         pageWidth / 2,
         pageHeight - 8,
         { align: "center" },
@@ -383,7 +383,7 @@ const renderPDFContent = (
       doc.text(`Page ${i} / ${pageCount}`, pageWidth - 20, pageHeight - 8);
     }
 
-    doc.save("Qafla-e-Sagir_Umrah_Offers.pdf");
+    doc.save("New Al Siraj_Umrah_Offers.pdf");
   } catch (err) {
     console.error("Error drawing elements:", err);
     throw err;

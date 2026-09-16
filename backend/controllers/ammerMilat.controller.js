@@ -34,8 +34,8 @@ const formatDate = (dateValue) => {
 // The default agency identity Ameer-e-Millat has us registered under —
 // these come from the env vars pasted alongside the login credentials.
 const getAmmerMilatAgencyDefaults = () => ({
-  agentName: getAmmerMilatEnv("AmmerMilat_API_AgencyName") || "Qafla-e-Sagir",
-  agencyName: getAmmerMilatEnv("AmmerMilat_API_AgencyName") || "Qafla-e-Sagir",
+  agentName: getAmmerMilatEnv("AmmerMilat_API_AgencyName") || "New Al Siraj",
+  agencyName: getAmmerMilatEnv("AmmerMilat_API_AgencyName") || "New Al Siraj",
   email: getAmmerMilatEnv("AmmerMilat_API_Email"),
   mobile: getAmmerMilatEnv("AmmerMilat_API_Mobile"),
 });

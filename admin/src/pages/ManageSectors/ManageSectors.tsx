@@ -137,9 +137,9 @@ function extractIATA(terminal: string): string {
 //     const footer =
 //         `*ALL GROUPS ARE NON REFUNDABLE AND NON CHANGEABLE*
 // =======================
-// Qafla-e-Sagir Travel
-// Mobile: 0300-6666344
-// Address: Office no 1, National Hotel, Near MCB Bank, Sargodha road, Faisalabad.New Civil lines Faisalabad.
+// New Al Siraj Travel
+// Mobile: 0306-6001334
+// Address: Plaza 44 First Floor Main Boulevard Garden Town Phase 3, GujranwalaNew Civil lines Faisalabad.
 // Website: https://qaflaesagirb2bportal.qaflaesagir.com/`;
 
 //     return [header, ...lines, "=======================", footer].join("\n");
@@ -284,9 +284,9 @@ function buildCopyText(groups: UnifiedGroup[]): string {
     const footer =
         `*ALL GROUPS ARE NON REFUNDABLE AND NON CHANGEABLE*
 =======================
-Qafla-e-Sagir Travel
-Mobile: 0300-6666344
-Address: Office no 1, National Hotel, Near MCB Bank, Sargodha road, Faisalabad.
+New Al Siraj Travel
+Mobile: 0306-6001334
+Address: Plaza 44 First Floor Main Boulevard Garden Town Phase 3, Gujranwala
 Website: https://qaflaesagirb2bportal.qaflaesagir.com/`;
 
     return [header, ...lines, "=======================", footer].join("\n");
@@ -445,7 +445,7 @@ export default function ManageSectors() {
 
     return (
         <>
-            <PageMeta title="All Sectors - Qafla-e-Sagir Travel" description="View all sectors list" />
+            <PageMeta title="All Sectors - New Al Siraj Travel" description="View all sectors list" />
 
             <div className="mb-6">
                 <PageBreadCrumb pageTitle="All Sectors" />

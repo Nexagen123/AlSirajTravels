@@ -169,34 +169,61 @@ export default function Footer({ user }) {
               </h3>
               <div className="space-y-4">
                 <a
-                  href="https://wa.me/+923006666344"
+                  href="https://wa.me/+923066001334"
                   className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors"
                 >
                   <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
                     <FaWhatsapp size={13} />
                   </div>
-                  <span className="text-xs font-medium">0300-6666344</span>
+                  <span className="text-xs font-medium">0306-6001334</span>
                 </a>
 
                 <a
-                  href="tel:+923106666344"
+                  href="tel:0552202782"
                   className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors"
                 >
                   <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
                     <FaPhoneAlt size={12} />
                   </div>
-                  <span className="text-xs font-medium">0310-6666344</span>
+                  <span className="text-xs font-medium">0552202782</span>
+                </a>
+                {/* <a
+                  href="tel:+923066001334"
+                  className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors"
+                >
+                  <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
+                    <FaPhoneAlt size={12} />
+                  </div>
+                  <span className="text-xs font-medium">0306-6001334</span>
+                </a> */}
+                <a
+                  href="tel:+9203000802965"
+                  className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors"
+                >
+                  <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
+                    <FaPhoneAlt size={12} />
+                  </div>
+                  <span className="text-xs font-medium">0300-0802965</span>
+                </a>
+                <a
+                  href="tel:+9203000802963"
+                  className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors"
+                >
+                  <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
+                    <FaPhoneAlt size={12} />
+                  </div>
+                  <span className="text-xs font-medium">0300-0802963</span>
                 </a>
 
                 <a
-                  href="mailto:qaflaesagir@gmail.com"
+                  href="mailto:newalsiraj1334@gmail.com"
                   className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors min-w-0"
                 >
                   <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
                     <IoMail size={13} />
                   </div>
                   <span className="text-xs font-medium truncate">
-                    qaflaesagir@gmail.com
+                    newalsiraj1334@gmail.com
                   </span>
                 </a>
 
@@ -206,8 +233,7 @@ export default function Footer({ user }) {
                     <IoLocationSharp size={14} />
                   </div>
                   <span className="text-xs font-medium leading-relaxed">
-                    Office no 1, National Hotel, Near MCB Bank, Sargodha road,
-                    Faisalabad.
+                    Plaza 44 First Floor Main Boulevard Garden Town Phase 3, Gujranwala
                   </span>
                 </div>
               </div>

@@ -403,9 +403,9 @@ const Ledger = () => {
               <img src={logo} alt="Company logo" className="ledger-print-logo" />
               <div className="ledger-print-company-text">
                 <strong>{userName.toUpperCase()}</strong>
-                <div>Qafla-e-Sagir Travel</div>
+                <div>New Al Siraj Travel</div>
                 <div>Email: qaflaesagir@gmail.com</div>
-                <div>Account statement generated from Qafla-e-Sagir Travel admin portal</div>
+                <div>Account statement generated from New Al Siraj Travel admin portal</div>
               </div>
             </div>
             <div className="ledger-print-opening">

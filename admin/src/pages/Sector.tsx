@@ -195,7 +195,7 @@ const Sector = () => {
 
     return (
         <>
-            <PageMeta title="Sector Management - Qafla-e-Sagir Travel" description="Manage and add sectors for different group types" />
+            <PageMeta title="Sector Management - New Al Siraj Travel" description="Manage and add sectors for different group types" />
 
             <div className="mb-6">
                 <PageBreadCrumb pageTitle="Sector" />

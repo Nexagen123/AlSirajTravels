@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-import logo from "../../../frontend/src/assets/images/logosiraj.png";
+import logo from "../assets/images/logosiraj-transparent.png";
 import { useAuth } from "../context/AuthContext";
 import { hasPermission } from "../utils/permissions";
 
@@ -385,13 +385,12 @@ const AppSidebar: React.FC = () => {
         className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
           }`}
       >
-        <Link to="/">
+        <Link to="/" className={isExpanded || isHovered || isMobileOpen ? "admin-logo-badge" : "admin-logo-badge admin-logo-badge--compact"}>
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <img
                 src={logo}
                 alt="Logo"
-                width={300}
               />
               {/* <img
                 className="hidden dark:block"
@@ -405,8 +404,6 @@ const AppSidebar: React.FC = () => {
             <img
               src={logo}
               alt="Logo"
-              width={32}
-              height={32}
             />
           )}
         </Link>
@@ -437,7 +434,7 @@ const AppSidebar: React.FC = () => {
       <div className={`py-4 border-t border-gray-200 dark:border-gray-800 ${!isExpanded && !isHovered ? "lg:text-center" : "text-center"}`}>
         {isExpanded || isHovered || isMobileOpen ? (
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} <a href="https://qaflaesagirb2bportal.qaflaesagir.com/" target="_blank">Qafla-e-Sagir Travel</a><br />All rights reserved.
+            © {new Date().getFullYear()} <a href="https://qaflaesagirb2bportal.qaflaesagir.com/" target="_blank">New Al Siraj Travel</a><br />All rights reserved.
           </p>
         ) : (
           <p className="text-xs text-gray-500 dark:text-gray-400">
