@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logosiraj.png";
 import { travelImages } from "../../data/travelImages";
+import uaeImg from "../../assets/images/uae.webp";
+import jeddahImg from "../../assets/images/jeddah.webp";
+import madinaImg from "../../assets/images/madina.webp";
+import mascatImg from "../../assets/images/mascat.webp";
+import qatarImg from "../../assets/images/qatar.jpg";
+import ukImg from "../../assets/images/uk.webp";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -11,27 +17,13 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ];
 
-const serviceTabs = [
-  { label: "Flights", icon: "flight" },
-  { label: "Group Tickets", icon: "users" },
-  { label: "Umrah Packages", icon: "moon" },
-  { label: "Visas", icon: "shield" },
-];
-
 const heroGroups = [
-  { label: "UAE One Way", image: travelImages.dubai, href: "/all-groups?type_filter=uae" },
-  { label: "KSA One Way", image: travelImages.makkah, href: "/all-groups?type_filter=ksa" },
-  { label: "Umrah Groups", image: travelImages.madinah, href: "/all-groups?type_filter=umrah" },
-  { label: "Oman One Way", image: travelImages.muscat, href: "/all-groups?type_filter=oman" },
-  { label: "Qatar Groups", image: travelImages.doha, href: "/all-groups?type_filter=qatar" },
-  { label: "UK Groups", image: travelImages.london, href: "/all-groups?type_filter=uk" },
-];
-
-const processSteps = [
-  ["01", "Search"],
-  ["02", "Choose your plan"],
-  ["03", "Book securely"],
-  ["04", "Travel confidently"],
+  { label: "UAE One Way", image: uaeImg, href: "/all-groups?type_filter=uae" },
+  { label: "KSA One Way", image: jeddahImg, href: "/all-groups?type_filter=ksa" },
+  { label: "Umrah Groups", image: madinaImg, href: "/all-groups?type_filter=umrah" },
+  { label: "Oman One Way", image: mascatImg, href: "/all-groups?type_filter=oman" },
+  { label: "Qatar Groups", image: qatarImg, href: "/all-groups?type_filter=qatar" },
+  { label: "UK Groups", image: ukImg, href: "/all-groups?type_filter=uk" },
 ];
 
 const serviceIcons = {
@@ -76,7 +68,6 @@ export default function HeroSection() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeTab, setActiveTab] = useState("Flights");
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("frontend_token"));
@@ -188,7 +179,7 @@ export default function HeroSection() {
         </header>
       )}
 
-      <section className="relative overflow-hidden min-h-[760px] bg-(--siraj-black) pt-28 md:pt-32">
+      <section className="relative overflow-hidden bg-(--siraj-black) pt-28 md:pt-32 pb-12 md:pb-16">
         <img
           src={travelImages.hero}
           alt="Pilgrims and travellers at a holy destination"
@@ -197,8 +188,8 @@ export default function HeroSection() {
         <div className="siraj-photo-overlay absolute inset-0" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-10 pb-16">
-          <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-8 lg:gap-10 items-end min-h-[620px]">
-            <div className="text-white pb-4 lg:pb-10">
+          <div className="grid lg:grid-cols-[0.92fr_1.08fr] gap-8 lg:gap-10 items-center min-h-[560px]">
+            <div className="text-white">
               <div className="inline-flex items-center gap-3 rounded-full bg-white/12 border border-white/15 px-4 py-2 mb-6 backdrop-blur">
                 <span className="w-2 h-2 rounded-full bg-(--siraj-gold-light)" />
                 <span className="text-[11px] font-black uppercase tracking-[0.22em]">
@@ -206,19 +197,16 @@ export default function HeroSection() {
                 </span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[0.98] max-w-2xl">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.04] max-w-xl">
                 Travel Made Easy.
               </h1>
-              <p className="mt-5 max-w-xl text-base md:text-lg leading-relaxed text-white/78 font-medium">
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-white/82 font-medium">
                 Group tickets, Umrah packages, visas, hotels, and travel support
                 arranged with a clear booking flow and a real team behind every trip.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  to={ctaPath}
-                  className="btn-gold rounded-full px-7 py-3.5 text-sm font-black text-(--siraj-black)"
-                >
+                <Link to={ctaPath} className="btn-gold rounded-full px-7 py-3.5 text-sm font-black text-(--siraj-black)">
                   Start Booking
                 </Link>
                 <Link
@@ -230,52 +218,37 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <div className="siraj-card p-4 md:p-5">
-              <div className="flex flex-wrap gap-2 border-b border-slate-100 pb-4">
-                {serviceTabs.map((tab) => (
-                  <button
-                    key={tab.label}
-                    type="button"
-                    onClick={() => setActiveTab(tab.label)}
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-black transition ${
-                      activeTab === tab.label
-                        ? "bg-(--siraj-blue-dark) text-white"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
-                  >
-                    <Icon name={tab.icon} className="w-4 h-4" />
-                    {tab.label}
-                  </button>
-                ))}
+            <div className="siraj-card overflow-hidden p-3 lg:ml-auto lg:max-w-[560px]">
+              <div className="relative aspect-[6/4] overflow-hidden rounded-2xl bg-slate-100">
+                <img
+                  src={travelImages.airport}
+                  alt="Airport departure lounge"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/78 via-black/20 to-transparent" />
+                <div className="absolute left-5 right-5 bottom-5 text-white">
+                  {/* <p className="siraj-kicker text-(--siraj-gold-light)!">
+                    Group Travel Desk
+                  </p>
+                  <h2 className="mt-2 text-2xl md:text-3xl font-black leading-tight">
+                    
+                  </h2> */}
+                </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-3 pt-5">
-                <BookingField label="From" value="City or airport" />
-                <BookingField label="To" value="City or airport" />
-                <BookingField label="Departure" value="Select date" />
-                <BookingField label="Guest" value="1 adult - 0 child - 0 infant" />
-              </div>
-
-              <div className="mt-5 flex flex-col sm:flex-row gap-3">
-                <Link
-                  to={ctaPath}
-                  className="btn-gold flex-1 rounded-xl py-3.5 text-center text-sm font-black text-(--siraj-black)"
-                >
-                  Search
-                </Link>
-                <Link
-                  to="/auth/login"
-                  className="rounded-xl border border-slate-200 px-5 py-3.5 text-center text-sm font-black text-(--siraj-blue-dark) hover:border-(--siraj-gold)"
-                >
-                  Find My Booking
-                </Link>
-              </div>
-
-              <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
-                {processSteps.map(([num, label]) => (
-                  <div key={label} className="rounded-xl bg-slate-50 px-3 py-3">
-                    <p className="text-(--siraj-gold) text-xs font-black">{num}</p>
-                    <p className="text-slate-700 text-xs font-bold mt-1">{label}</p>
+              <div className="grid grid-cols-3 gap-2.5 pt-3">
+                {[
+                  ["50k+", "Seats"],
+                  ["24/7", "Support"],
+                  ["PKR", "Fares"],
+                ].map(([value, label]) => (
+                  <div key={label} className="rounded-xl bg-slate-50 px-3 py-3 text-center">
+                    <p className="text-lg font-black text-(--siraj-blue-dark)">
+                      {value}
+                    </p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      {label}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -284,26 +257,48 @@ export default function HeroSection() {
         </div>
       </section>
 
-      <section className="relative z-20 -mt-12 pb-14 bg-white">
+      <section className="relative z-20 bg-white py-10 md:py-12">
         <div className="max-w-7xl mx-auto px-5 md:px-10">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <p className="siraj-kicker">Popular Groups</p>
+              <h2 className="mt-1 text-2xl md:text-3xl font-black text-(--siraj-blue-dark)">
+                Choose Your Route
+              </h2>
+            </div>
+            <Link
+              to={isLoggedIn ? "/dashboard/groups" : "/auth/register"}
+              className="hidden sm:inline-flex rounded-full border border-slate-200 px-4 py-2 text-xs font-black text-(--siraj-blue-dark) hover:border-(--siraj-gold)"
+            >
+              See All
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {heroGroups.map((group) => (
               <Link
                 key={group.label}
                 to={isLoggedIn ? group.href.replace("/all-groups", "/dashboard/groups") : "/auth/register"}
-                className="group relative h-36 overflow-hidden rounded-2xl shadow-lg shadow-slate-900/10"
+                className="group overflow-hidden rounded-2xl bg-white shadow-lg shadow-slate-900/10 ring-1 ring-slate-200/70 transition hover:-translate-y-1 hover:shadow-xl"
               >
-                <img
-                  src={group.image}
-                  alt={group.label}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                  <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-(--siraj-gold)">
+                <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
+                  <div
+                    className="absolute inset-0 bg-center bg-cover opacity-20 blur-md scale-110"
+                    style={{ backgroundImage: `url(${group.image})` }}
+                  />
+                  <img
+                    src={group.image}
+                    alt={group.label}
+                    className="relative z-10 block h-full w-full object-contain object-center p-1.5 transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+                </div>
+                <div className="flex items-center gap-2 p-3">
+                  <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--siraj-gold)">
                     <Icon name="pin" className="h-4 w-4 text-(--siraj-black)" />
                   </div>
-                  <p className="text-sm font-black leading-tight">{group.label}</p>
+                  <p className="text-sm font-black leading-tight text-(--siraj-blue-dark)">
+                    {group.label}
+                  </p>
                 </div>
               </Link>
             ))}
@@ -311,16 +306,5 @@ export default function HeroSection() {
         </div>
       </section>
     </>
-  );
-}
-
-function BookingField({ label, value }) {
-  return (
-    <label className="block rounded-xl border border-slate-200 bg-white px-4 py-3">
-      <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-(--siraj-gold)">
-        {label}
-      </span>
-      <span className="mt-1 block text-sm font-bold text-slate-700">{value}</span>
-    </label>
   );
 }

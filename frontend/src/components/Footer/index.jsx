@@ -27,7 +27,7 @@ export default function Footer({ user }) {
   return (
     <>
       {/* --- TOP CTA: ACTION ZONE --- */}
-      {!user?._id && (
+      {/* {!user?._id && (
         <div className="relative overflow-hidden bg-linear-to-br from-(--siraj-black) via-(--clay-navy-dark) to-(--clay-navy)">
           <div
             className="absolute inset-0 opacity-[0.07] pointer-events-none"
@@ -73,7 +73,7 @@ export default function Footer({ user }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* --- MAIN FOOTER --- */}
       <footer id="contact" className="relative bg-(--siraj-black) text-white overflow-hidden">

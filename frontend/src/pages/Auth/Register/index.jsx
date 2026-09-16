@@ -157,12 +157,12 @@ const Register = () => {
           <div className="absolute bottom-10 -left-20 w-64 h-64 rounded-full bg-(--clay-navy-light) opacity-30 blur-3xl pointer-events-none" />
 
           <div className="relative z-10 space-y-5">
-            <div className="clay-glass-light inline-flex items-center gap-2 px-3.5 py-1.5">
+            {/* <div className="clay-glass-light inline-flex items-center gap-2 px-3.5 py-1.5">
               <Sparkles className="w-3.5 h-3.5 text-(--clay-gold-light)" />
               <span className="text-[11px] uppercase tracking-widest font-bold text-white">
                 B2B Portal Access
               </span>
-            </div>
+            </div> */}
             <h2 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
               Expand Your Agency
               <span className="block text-(--clay-gold-light)">
