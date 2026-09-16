@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import saudia from "../../assets/images/partners/saudia.svg";
 import emirates from "../../assets/images/partners/emirates.png";
 import omanAir from "../../assets/images/partners/oman-air.png";
@@ -21,14 +21,49 @@ const partners = [
   { name: "Gulf Air", logo: gulfAir },
 ];
 
+const SPEED = 0.7; // px per frame — increase for faster scroll
+
 export default function PartnersSection() {
   const trackRef = useRef(null);
+  const isPausedRef = useRef(false);
+  const rafRef = useRef(null);
 
   const scrollByAmount = (direction) => {
     const track = trackRef.current;
     if (!track) return;
     track.scrollBy({ left: direction * track.clientWidth * 0.8, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let lastTime = performance.now();
+
+    const tick = (now) => {
+      const delta = now - lastTime;
+      lastTime = now;
+
+      if (!isPausedRef.current) {
+        // half of scrollWidth because we duplicated the list
+        const half = track.scrollWidth / 2;
+        track.scrollLeft += SPEED * (delta / 16.67); // normalize to 60fps
+
+        // when we've scrolled past the first copy, jump back seamlessly
+        if (track.scrollLeft >= half) {
+          track.scrollLeft -= half;
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  // duplicate for seamless loop
+  const loopedPartners = [...partners, ...partners];
 
   return (
     <section className="bg-white py-16 md:py-20">
@@ -52,11 +87,15 @@ export default function PartnersSection() {
 
           <div
             ref={trackRef}
-            className="scrollbar-none flex min-w-0 flex-1 items-center gap-10 overflow-x-auto scroll-smooth md:gap-14"
+            onMouseEnter={() => (isPausedRef.current = true)}
+            onMouseLeave={() => (isPausedRef.current = false)}
+            onTouchStart={() => (isPausedRef.current = true)}
+            onTouchEnd={() => (isPausedRef.current = false)}
+            className="scrollbar-none flex min-w-0 flex-1 items-center gap-10 overflow-x-auto md:gap-14"
           >
-            {partners.map((partner) => (
+            {loopedPartners.map((partner, i) => (
               <div
-                key={partner.name}
+                key={`${partner.name}-${i}`}
                 className="flex h-17 w-38.5 shrink-0 items-center justify-center"
               >
                 <img
