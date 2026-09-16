@@ -1,0 +1,594 @@
+@import "tailwindcss";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold;
+}
+
+button {
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+input {
+    outline: none;
+}
+
+textarea {
+    outline: none;
+    resize: none;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding-inline: 16px;
+}
+
+/* Responsive utilities */
+.responsive-text-xl {
+    font-size: 1.25rem;
+}
+
+.responsive-text-2xl {
+    font-size: 1.5rem;
+}
+
+.responsive-text-3xl {
+    font-size: 1.875rem;
+}
+
+/* Responsive padding/margin helpers */
+.responsive-p {
+    padding: 1rem;
+}
+
+.responsive-px {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.responsive-py {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* Responsive grid/flex helpers */
+.responsive-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Table responsive wrapper */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    min-width: 600px;
+}
+
+/* Button responsive */
+button,
+.btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Form inputs responsive */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="tel"],
+select,
+textarea {
+    font-size: 1rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .main-container {
+        padding-inline: 20px;
+    }
+
+    .responsive-text-3xl {
+        font-size: 1.5rem;
+    }
+
+    .responsive-text-2xl {
+        font-size: 1.25rem;
+    }
+
+    .responsive-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 0.75rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-container {
+        padding-inline: 16px;
+    }
+
+    .responsive-text-3xl {
+        font-size: 1.25rem;
+    }
+
+    .responsive-text-2xl {
+        font-size: 1.125rem;
+    }
+
+    .responsive-text-xl {
+        font-size: 1rem;
+    }
+
+    .responsive-p {
+        padding: 0.75rem;
+    }
+
+    .responsive-px {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .responsive-py {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .responsive-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    button,
+    .btn {
+        font-size: 0.8125rem;
+        padding: 0.4rem 0.75rem;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .main-container {
+        padding-inline: 12px;
+    }
+
+    .responsive-text-3xl {
+        font-size: 1.125rem;
+    }
+
+    .responsive-text-2xl {
+        font-size: 1rem;
+    }
+
+    .responsive-text-xl {
+        font-size: 0.9375rem;
+    }
+
+    .responsive-p {
+        padding: 0.5rem;
+    }
+
+    .responsive-px {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .responsive-py {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    button,
+    .btn {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.625rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="date"],
+    input[type="tel"],
+    select,
+    textarea {
+        font-size: 0.875rem;
+    }
+}
+
+/* Ensure images are responsive */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Prevent horizontal scroll */
+body {
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+}
+
+.scroll-top-button {
+    position: fixed;
+    right: 20px;
+    bottom: 92px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 9999px;
+    background: #0f172a;
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.scroll-top-button:hover {
+    background: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.4);
+}
+
+.scroll-top-button svg {
+    width: 28px;
+    height: 28px;
+}
+
+.whatsapp-float-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 9999px;
+    background: #25d366;
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(37, 211, 102, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.whatsapp-float-button:hover {
+    background: #1ebe5b;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(37, 211, 102, 0.45);
+}
+
+.whatsapp-float-button svg {
+    width: 30px;
+    height: 30px;
+}
+
+@media screen and (max-width: 640px) {
+    .scroll-top-button {
+        right: 16px;
+        bottom: 84px;
+        width: 52px;
+        height: 52px;
+    }
+
+    .scroll-top-button svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    .whatsapp-float-button {
+        right: 16px;
+        bottom: 16px;
+        width: 56px;
+        height: 56px;
+    }
+
+    .whatsapp-float-button svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* Make sure containers don't overflow */
+* {
+    box-sizing: border-box;
+}
+
+/* Hide scrollbar for cleaner mobile experience while keeping functionality */
+@media screen and (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f7fafc;
+    }
+}
+
+/* React DatePicker Custom Styles */
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+.react-datepicker {
+    font-family: inherit;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.react-datepicker__header {
+    background: linear-gradient(to right, #1e3a5f, #2d5a8f);
+    border-bottom: none;
+    padding: 0.875rem 0.75rem 0.5rem;
+    border-radius: 0;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+    color: white;
+    font-weight: 600;
+}
+
+.react-datepicker__current-month {
+    margin-bottom: 0.5rem;
+}
+
+.react-datepicker__month-dropdown-container,
+.react-datepicker__year-dropdown-container {
+    margin: 0 0.25rem 0.5rem;
+}
+
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+    min-width: 5.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 0.375rem;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.35rem 1.7rem 0.35rem 0.5rem;
+    outline: none;
+}
+
+.react-datepicker__month-select:focus,
+.react-datepicker__year-select:focus {
+    border-color: #bfdbfe;
+    box-shadow: 0 0 0 2px rgba(191, 219, 254, 0.45);
+}
+
+.react-datepicker__day {
+    color: #374151;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    margin: 0.2rem;
+}
+
+.react-datepicker__day:hover {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+}
+
+.react-datepicker__day--today {
+    font-weight: 600;
+    color: #1d4ed8;
+    background-color: #eff6ff;
+}
+
+.react-datepicker__navigation {
+    top: 0.875rem;
+}
+
+.react-datepicker__navigation-icon::before {
+    border-color: white;
+}
+
+.react-datepicker__navigation:hover *::before {
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.react-datepicker__month {
+    margin: 0.5rem;
+}
+
+@media screen and (max-width: 640px) {
+    .react-datepicker {
+        width: min(18.5rem, calc(100vw - 2rem));
+    }
+
+    .react-datepicker__month-select,
+    .react-datepicker__year-select {
+        min-width: 4.9rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* ── Hero Section: Ken Burns zoom effect ─────────────────────────────────── */
+@keyframes kenBurns {
+  0%   { transform: scale(1.05); }
+  100% { transform: scale(1.12); }
+}
+
+/* ── Services showcase: tab progress bar + photo crossfade ──────────────── */
+@keyframes fillProgress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+@keyframes fadeInPhoto {
+  from { opacity: 0; transform: scale(1.03); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Shared visual system — New Al Siraj logo colors
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --siraj-black: #050506;
+  --siraj-blue: #0758d8;
+  --siraj-blue-dark: #06245f;
+  --siraj-gold: #d8a11d;
+  --siraj-gold-light: #ffe179;
+  --siraj-cream: #fbf7ed;
+  --siraj-ink: #101827;
+  --siraj-muted: #64748b;
+  --clay-navy: #0a3f9f;
+  --clay-navy-light: #1466df;
+  --clay-navy-dark: #06183f;
+  --clay-gold: #d8a11d;
+  --clay-gold-light: #ffe179;
+  --clay-gold-dark: #b87908;
+  --clay-bg: #f5f7fb;
+}
+
+/* Soft off-white panel — flat, single low shadow */
+.clay-white {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(6, 24, 63, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(6, 24, 63, 0.08);
+}
+
+/* Navy panel/button — flat, single low shadow */
+.clay-navy {
+  background: linear-gradient(135deg, var(--clay-navy-light), var(--clay-navy-dark));
+  border-radius: 18px;
+  box-shadow: 0 16px 36px rgba(6, 24, 63, 0.22);
+}
+
+/* Gold panel/button — flat, single low shadow */
+.clay-gold {
+  background: linear-gradient(135deg, var(--clay-gold-light), var(--clay-gold), var(--clay-gold-dark));
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(184, 121, 8, 0.22);
+}
+
+/* Frosted clay glass — for panels floating over photos */
+.clay-glass {
+  background: rgba(5, 5, 6, 0.58);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+}
+
+/* Lighter frosted chip — for badges/pills/stat chips over photos */
+.clay-glass-light {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Inset / pressed clay well — for image frames, inputs */
+.clay-well {
+  border-radius: 14px;
+  box-shadow: inset 0 1px 2px rgba(6, 24, 63, 0.07);
+}
+
+.clay-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clay-btn:hover {
+  transform: translateY(-2px);
+}
+
+.clay-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Clean flat CTA buttons — crisp color, minimal shadow ────────────────── */
+.btn-gold {
+  background: linear-gradient(135deg, #fff0a8 0%, #d8a11d 58%, #a96505 100%);
+  box-shadow: 0 12px 24px rgba(184, 121, 8, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(221, 154, 16, 0.3);
+}
+
+.btn-gold:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn-outline-white {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-outline-white:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-outline-white:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.siraj-section {
+  background:
+    radial-gradient(circle at top left, rgba(216, 161, 29, 0.1), transparent 28rem),
+    linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+}
+
+.siraj-logo-frame {
+  background: var(--siraj-black);
+  border: 1px solid rgba(216, 161, 29, 0.55);
+  box-shadow: 0 14px 32px rgba(5, 5, 6, 0.16);
+}
+
+.siraj-card {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(6, 24, 63, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(6, 24, 63, 0.08);
+}
+
+.siraj-kicker {
+  color: var(--siraj-gold);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.siraj-photo-overlay {
+  background:
+    linear-gradient(90deg, rgba(5, 5, 6, 0.78) 0%, rgba(6, 24, 63, 0.62) 42%, rgba(6, 24, 63, 0.18) 100%),
+    linear-gradient(0deg, rgba(5, 5, 6, 0.52), rgba(5, 5, 6, 0.08));
+}

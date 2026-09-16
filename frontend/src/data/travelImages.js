@@ -1,0 +1,28 @@
+export const travelImages = {
+  hero:
+    "https://images.pexels.com/photos/20277838/pexels-photo-20277838.jpeg?auto=compress&cs=tinysrgb&w=1800",
+  flight:
+    "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=85&w=1200",
+  airport:
+    "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&q=85&w=1200",
+  makkah:
+    "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=85&w=1200",
+  madinah:
+    "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?auto=format&fit=crop&q=85&w=1200",
+  dubai:
+    "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=85&w=1200",
+  doha:
+    "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=85&w=1200",
+  muscat:
+    "https://images.unsplash.com/photo-1578944590497-0c94fe0af8a2?auto=format&fit=crop&q=85&w=1200",
+  london:
+    "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=85&w=1200",
+  hotel:
+    "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=85&w=1200",
+  passport:
+    "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=85&w=1200",
+  travelers:
+    "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&q=85&w=1200",
+  newsletter:
+    "https://images.unsplash.com/photo-1500835556837-99ac94a94552?auto=format&fit=crop&q=85&w=1200",
+};
