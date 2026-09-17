@@ -190,7 +190,7 @@ export const sendPasswordResetEmail = async (
     // Construct reset link
     const frontendURL =
       process.env.FRONTEND_URL ||
-      "https://qaflaesagirb2bportal.qaflaesagir.com";
+      "https://newalsiraj.com";
     const resetLink = `${frontendURL}/auth/forgot-password?token=${resetToken}&userId=${userId}`;
 
     const mailOptions = {
@@ -350,7 +350,7 @@ const getCredentialsEmailHTML = (
           </div>
 
           <div style="text-align: center;">
-            <a href="${process.env.FRONTEND_URL || "https://qaflaesagirb2bportal.qaflaesagir.com"}" class="button">Login to Your Account</a>
+            <a href="${process.env.FRONTEND_URL || "https://newalsiraj.com"}" class="button">Login to Your Account</a>
           </div>
 
           <div class="warning">
@@ -417,7 +417,7 @@ export const sendCredentialsEmail = async (
         userName,
         companyName,
       ),
-      text: `Hello ${userName},\n\nWelcome to New Al Siraj Travel ! Your agency account has been created successfully.\n\nCompany: ${companyName}\n\nYour Login Credentials:\nAgent Code: ${agentCode}\nEmail: ${email}\nPassword: ${password}\n\nLogin URL: ${process.env.FRONTEND_URL || "https://qaflaesagirb2bportal.qaflaesagir.com"}\n\nSecurity Tips:\n- Keep your credentials safe and secure\n- Do not share your password with anyone\n- We recommend changing your password after first login\n\nBest regards,\nNew Al Siraj Travel `,
+      text: `Hello ${userName},\n\nWelcome to New Al Siraj Travel ! Your agency account has been created successfully.\n\nCompany: ${companyName}\n\nYour Login Credentials:\nAgent Code: ${agentCode}\nEmail: ${email}\nPassword: ${password}\n\nLogin URL: ${process.env.FRONTEND_URL || "https://newalsiraj.com"}\n\nSecurity Tips:\n- Keep your credentials safe and secure\n- Do not share your password with anyone\n- We recommend changing your password after first login\n\nBest regards,\nNew Al Siraj Travel `,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -451,7 +451,7 @@ const getAdminCredentialsLoginUrl = () => {
   }
 
   const frontendUrl = (
-    process.env.FRONTEND_URL || "https://qaflaesagirb2bportal.qaflaesagir.com"
+    process.env.FRONTEND_URL || "https://newalsiraj.com"
   ).replace(/\/$/, "");
   return `${frontendUrl}/admin-portal/signin`;
 };

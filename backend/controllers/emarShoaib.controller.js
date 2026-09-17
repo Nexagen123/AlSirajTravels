@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const base_url = "https://qaflaesagirb2bportal.qaflaesagir.com/admins/api";
+const base_url = "https://newalsiraj.com/admins/api";
 
 const token = "";
 

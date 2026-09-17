@@ -655,7 +655,7 @@ export const exchangeLoginCode = async (req, res) => {
     const { code } = req.body;
 
     const DOMAIN_B =
-      process.env.DOMAIN_B || "qaflaesagirb2bportal.qaflaesagir.com";
+      process.env.DOMAIN_B || "newalsiraj.com";
     const DASHBOARD_COOKIE_NAME =
       process.env.DASHBOARD_COOKIE_NAME || "dashboard_token";
 
@@ -1819,7 +1819,7 @@ export const sendUserCredentials = async (req, res) => {
 export const logoutUser = async (req, res) => {
   try {
     const DOMAIN_B =
-      process.env.DOMAIN_B || "qaflaesagirb2bportal.qaflaesagir.com";
+      process.env.DOMAIN_B || "newalsiraj.com";
     const DASHBOARD_COOKIE_NAME =
       process.env.DASHBOARD_COOKIE_NAME || "dashboard_token";
 
@@ -1854,9 +1854,9 @@ export const ssoRedirect = async (req, res) => {
     const { code } = req.query;
 
     const DOMAIN_A =
-      process.env.DOMAIN_A || "qaflaesagirb2bportal.qaflaesagir.com"; // login domain
+      process.env.DOMAIN_A || "newalsiraj.com"; // login domain
     const DOMAIN_B =
-      process.env.DOMAIN_B || "qaflaesagirb2bportal.qaflaesagir.com"; // dashboard domain
+      process.env.DOMAIN_B || "newalsiraj.com"; // dashboard domain
     const DASHBOARD_COOKIE_NAME =
       process.env.DASHBOARD_COOKIE_NAME || "dashboard_token";
 
@@ -1908,7 +1908,7 @@ export const ssoRedirect = async (req, res) => {
     return res.redirect(`https://${DOMAIN_B}/dashboard`);
   } catch (error) {
     const DOMAIN_A =
-      process.env.DOMAIN_A || "qaflaesagirb2bportal.qaflaesagir.com";
+      process.env.DOMAIN_A || "newalsiraj.com";
     return res.redirect(`https://${DOMAIN_A}/login`);
   }
 };

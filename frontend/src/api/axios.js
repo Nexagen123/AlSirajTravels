@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8016/api", // backend ka port
-  // baseURL: "https://qaflaesagirb2bportal.qaflaesagir.com/api", // backend ka port
+  // baseURL: "http://localhost:8016/api", // backend ka port
+  baseURL: "https://newalsiraj.com/api", // backend ka port
   withCredentials: true,
 });
 
@@ -70,10 +70,10 @@ export default axiosInstance;
 //       const currentHost = window.location.hostname;
 
 //       const isDashboardDomain =
-//         currentHost === "Qafla-e-Sagir Traveltravel.com" || currentHost === "www.Qafla-e-Sagir Traveltravel.com";
+//         currentHost === "New Al Siraj Traveltravel.com" || currentHost === "www.New Al Siraj Traveltravel.com";
 
 //       if (isDashboardDomain && !window.location.pathname.startsWith("/")) {
-//         window.location.href = "https://qaflaesagirb2bportal.qaflaesagir.com/login";
+//         window.location.href = "https://newalsiraj.com/login";
 //       }
 //     }
 

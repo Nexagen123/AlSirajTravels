@@ -61,7 +61,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://qaflaesagirb2bportal.qaflaesagir.com",
+      "https://newalsiraj.com",
     ],
     credentials: true,
   }),

@@ -95,7 +95,7 @@ const RegisteredAgencies = () => {
   const [recoveringAgent, setRecoveringAgent] = useState<string | null>(null);
 
   const frontendUrl =
-    import.meta.env.VITE_FRONTEND_URL || "https://qaflaesagirb2bportal.qaflaesagir.com/auth/login";
+    import.meta.env.VITE_FRONTEND_URL || "https://newalsiraj.com/auth/login";
 
   const MAX_ACTIVE_AGENTS = 2000;
 

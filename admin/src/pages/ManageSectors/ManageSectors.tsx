@@ -140,7 +140,7 @@ function extractIATA(terminal: string): string {
 // New Al Siraj Travel
 // Mobile: 0306-6001334
 // Address: Plaza 44 First Floor Main Boulevard Garden Town Phase 3, GujranwalaNew Civil lines Faisalabad.
-// Website: https://qaflaesagirb2bportal.qaflaesagir.com/`;
+// Website: https://newalsiraj.com/`;
 
 //     return [header, ...lines, "=======================", footer].join("\n");
 // }
@@ -287,7 +287,7 @@ function buildCopyText(groups: UnifiedGroup[]): string {
 New Al Siraj Travel
 Mobile: 0306-6001334
 Address: Plaza 44 First Floor Main Boulevard Garden Town Phase 3, Gujranwala
-Website: https://qaflaesagirb2bportal.qaflaesagir.com/`;
+Website: https://newalsiraj.com/`;
 
     return [header, ...lines, "=======================", footer].join("\n");
 }
