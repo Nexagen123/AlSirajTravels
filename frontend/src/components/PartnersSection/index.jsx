@@ -21,7 +21,7 @@ const partners = [
   { name: "Gulf Air", logo: gulfAir },
 ];
 
-const SPEED = 0.7; // px per frame — increase for faster scroll
+const SPEED = 0.7; 
 
 export default function PartnersSection() {
   const trackRef = useRef(null);

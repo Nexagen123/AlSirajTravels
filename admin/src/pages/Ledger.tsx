@@ -7,7 +7,7 @@ import PageMeta from "../components/common/PageMeta";
 import PageBreadCrumb from "../components/common/PageBreadCrumb";
 import { useAuth } from "../context/AuthContext";
 import { hasPermission } from "../utils/permissions";
-import logo from "../assets/images/logosiraj.png";
+import logo from "../assets/images/logosirajjj.png";
 
 interface LedgerEntry {
   voucherId: string;

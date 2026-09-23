@@ -40,6 +40,9 @@ import fzPakistanRoutes from "./routes/fzPakistan.routes.js";
 import { initializeFzPakistanToken } from "./utils/fzPakistanToken.js";
 import ammerMilatAPIRoutes from "./routes/ammerMilatAPI.routes.js";
 import { initializeAmmerMilatToken } from "./utils/ammerMilatToken.js";
+import alAyyanRoutes from "./routes/alAyyan.routes.js";
+import alAyyanUmrahMarginRoutes from "./routes/alAyyanUmrahMargin.routes.js";
+import { initializeAlAyyanToken } from "./utils/alAyyanToken.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,6 +104,8 @@ app.use("/api/fz-pakistan-umrah-margin", fzPakistanUmrahMarginRoutes);
 app.use("/api/full-umrah-package-margin", fullUmrahPackageMarginRoutes);
 app.use("/api/fz-pakistan", fzPakistanRoutes);
 app.use("/api/ammer-milat", ammerMilatAPIRoutes);
+app.use("/api/al-ayyan-umrah-margin", alAyyanUmrahMarginRoutes);
+app.use("/api/al-ayyan", alAyyanRoutes);
 
 /* Initialize FZ Pakistan token: generate one if it doesn't exist or has expired */
 (async () => {
@@ -108,6 +113,7 @@ app.use("/api/ammer-milat", ammerMilatAPIRoutes);
   await new Promise((resolve) => setTimeout(resolve, 1000));
   await initializeFzPakistanToken();
   await initializeAmmerMilatToken();
+  await initializeAlAyyanToken();
 })();
 // Sabaoon integration removed. Only Al-Haider API is used for group data.
 

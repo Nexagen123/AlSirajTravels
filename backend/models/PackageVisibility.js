@@ -12,7 +12,13 @@ const packageVisibilitySchema = new mongoose.Schema(
     // Source of the package
     source: {
       type: String,
-      enum: ["local-db", "travel-network", "fz-pakistan", "full-umrah-package"],
+      enum: [
+        "local-db",
+        "travel-network",
+        "fz-pakistan",
+        "full-umrah-package",
+        "al-ayyan",
+      ],
       required: true,
       index: true,
     },

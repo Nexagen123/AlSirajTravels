@@ -301,6 +301,7 @@ const SOURCE_LABELS: Record<string, string> = {
     skypass: "SkyPass",
     "fz-pakistan": "Flying Zone Pakistan",
     "ammer-milat": "Ameer-e-Millat",
+    "al-ayyan": "Al-Ayyan",
 };
 
 const MONTHS_TITLE = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -985,6 +986,8 @@ export default function ApiGroups() {
                 return { label: "FZ-PAKISTAN", color: "bg-sky-100 text-sky-700 border-sky-200" };
             case "ammer-milat":
                 return { label: "AMEER-E-MILLAT", color: "bg-rose-100 text-rose-700 border-rose-200" };
+            case "al-ayyan":
+                return { label: "AL-AYYAN", color: "bg-indigo-100 text-indigo-700 border-indigo-200" };
             default:
                 return { label: "EXTERNAL", color: "bg-gray-100 text-gray-700 border-gray-200" };
         }

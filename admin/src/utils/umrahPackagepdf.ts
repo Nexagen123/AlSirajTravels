@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 // @ts-ignore - Ignore error if your build system handles image imports naturally
-import logo from "../assets/images/logosiraj.png";
+import logo from "../assets/images/logosirajjj.png";
 
 // ==========================================
 // TYPE DEFINITIONS & INTERFACES

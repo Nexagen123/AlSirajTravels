@@ -8,7 +8,7 @@ import {
   useLocation,
   useSearchParams,
 } from "react-router-dom";
-import logo from "../../assets/images/logosiraj.png";
+import logo from "../../assets/images/logosirajjj.png";
 import { theme } from "../../theme/theme";
 
 // Sub-Component: Clean, Solid OldHeader

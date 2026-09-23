@@ -39,6 +39,10 @@ const PassengerDetailSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    passportIssue: {
+      type: Date,
+      required: false,
+    },
     nationality: {
       type: String,
       required: true,
@@ -230,7 +234,13 @@ const UmrahPackageBookingSchema = new mongoose.Schema(
     // Package Source - to identify if from ZIP accounts or local DB
     packageSource: {
       type: String,
-      enum: ["local-db", "travel-network", "fz-pakistan", "full-umrah-package"],
+      enum: [
+        "local-db",
+        "travel-network",
+        "fz-pakistan",
+        "full-umrah-package",
+        "al-ayyan",
+      ],
       default: "local-db",
       required: true,
     },
@@ -360,6 +370,12 @@ const UmrahPackageBookingSchema = new mongoose.Schema(
 
     fzPakistanBookingId: String,
     fzPakistanBookingStatus: {
+      type: String,
+      enum: ["pending", "success", "failed", "not_applicable"],
+      default: "not_applicable",
+    },
+    alAyyanBookingId: String,
+    alAyyanBookingStatus: {
       type: String,
       enum: ["pending", "success", "failed", "not_applicable"],
       default: "not_applicable",

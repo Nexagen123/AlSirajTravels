@@ -235,6 +235,7 @@ const defaultAdult = {
   passport: "",
   dateOfBirth: "",
   passportExpiry: "",
+  passportIssue: "",
   nationality: "Pakistan",
   passportFile: null,
   passportFileName: "",
@@ -248,6 +249,7 @@ const defaultChild = {
   passport: "",
   dateOfBirth: "",
   passportExpiry: "",
+  passportIssue: "",
   nationality: "Pakistan",
   passportFile: null,
   passportFileName: "",
@@ -261,6 +263,7 @@ const defaultInfant = {
   passport: "",
   dateOfBirth: "",
   passportExpiry: "",
+  passportIssue: "",
   nationality: "Pakistan",
   passportFile: null,
   passportFileName: "",
@@ -617,6 +620,7 @@ export default function UmrahBookingPage({ user }) {
           "passport",
           "dateOfBirth",
           "passportExpiry",
+          "passportIssue",
           "nationality",
         ].forEach((k) => fd.append(`passengers[${i}][${k}]`, p[k]));
         if (p.passportFile)
@@ -717,12 +721,13 @@ export default function UmrahBookingPage({ user }) {
             { label: "DOB *", key: "dateOfBirth", type: "date" },
             { label: "Nationality *", key: "nationality", type: "text" },
             { label: "Expiry *", key: "passportExpiry", type: "date" },
+            { label: "Passport Issue", key: "passportIssue", type: "date" },
           ].map(({ label, key, type: inputType, opts, placeholder }) => (
             <div key={key}>
               <label style={s.label}>{label}</label>
               {inputType === "select" ? (
                 <select
-                  required
+                  required={label.includes("*")}
                   value={pax[key]}
                   onChange={(e) => onChange(i, key, e.target.value)}
                   style={s.input}
@@ -734,7 +739,7 @@ export default function UmrahBookingPage({ user }) {
               ) : (
                 <input
                   type={inputType}
-                  required
+                  required={label.includes("*")}
                   value={pax[key]}
                   placeholder={placeholder}
                   onChange={(e) =>

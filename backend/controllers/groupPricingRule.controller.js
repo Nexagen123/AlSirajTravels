@@ -7,6 +7,8 @@ const KNOWN_PROVIDERS = [
   { key: "travel-network", label: "Travel Network" },
   { key: "skypass", label: "SkyPass" },
   { key: "fz-pakistan", label: "Flying Zone Pakistan" },
+  { key: "ammer-milat", label: "Ameer-e-Millat" },
+  { key: "al-ayyan", label: "Al-Ayyan" },
 ];
 
 /* ===============================

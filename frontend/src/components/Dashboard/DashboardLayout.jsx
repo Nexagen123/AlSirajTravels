@@ -16,7 +16,7 @@ import {
   Bell,
   List,
 } from "lucide-react";
-import logo from "../../assets/images/logosiraj.png";
+import logo from "../../assets/images/logosirajjj.png";
 
 /* ─── Ripple ─────────────────────────────────────────────── */
 const RippleButton = ({ children, style, onClick, className, to }) => {

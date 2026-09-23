@@ -14,6 +14,7 @@ import {
 import { applyPricingRules } from "../utils/applyPricingRules.js";
 import { fetchNormalisedFzPakistanGroups } from "./fzPakistan.controller.js";
 import { fetchNormalisedAmmerMilatGroups } from "./ammerMilat.controller.js";
+import { fetchNormalisedAlAyyanGroups } from "./alAyyan.controller.js";
 
 const normalizeSector = (sector) => {
   if (!sector) return null;
@@ -831,6 +832,49 @@ export const getUnifiedGroups = async (req, res) => {
     }
 
     /* ===============================
+       Fetch Al Ayyan Groups (live, not cached)
+    =============================== */
+    let alAyyanGroups = [];
+    try {
+      const rawAlAyyan = await fetchNormalisedAlAyyanGroups();
+
+      const airlineShortMap = {};
+      const airlineLogoMap = {};
+      for (const a of airlines) {
+        if (a.airlineName) {
+          const key = a.airlineName.trim().toLowerCase();
+          airlineShortMap[key] = a.shortCode || null;
+          airlineLogoMap[key] = a.logo || null;
+        }
+      }
+
+      alAyyanGroups = rawAlAyyan.map((g) => {
+        const airlineKey = (g.airline?.airline_name || "").trim().toLowerCase();
+        return {
+          ...g,
+          sector: normalizeSector(g.sector),
+          source: "al-ayyan",
+          isOwnGroup: false,
+          airline: g.airline
+            ? {
+                ...g.airline,
+                short_name:
+                  airlineShortMap[airlineKey] || g.airline.short_name || null,
+                logo_url:
+                  g.airline.logo_url || airlineLogoMap[airlineKey] || null,
+              }
+            : g.airline,
+        };
+      });
+    } catch (alAyyanErr) {
+      // Non-fatal — other sources are still returned
+      console.error(
+        "Al Ayyan fetch for unified groups failed:",
+        alAyyanErr.message,
+      );
+    }
+
+    /* ===============================
        1️⃣2️⃣ Response
     =============================== */
     const adminGroupsData = cacheDoc.data.map((g) => ({
@@ -845,6 +889,7 @@ export const getUnifiedGroups = async (req, res) => {
       ...travelNetworkGroups,
       ...fzPakistanGroups,
       ...ammerMilatGroups,
+      ...alAyyanGroups,
     ];
 
     /* ===============================
@@ -878,6 +923,7 @@ export const getUnifiedGroups = async (req, res) => {
         travelNetwork: travelNetworkGroups.length,
         fzPakistanGroups: fzPakistanGroups.length,
         ammerMilatGroups: ammerMilatGroups.length,
+        alAyyanGroups: alAyyanGroups.length,
       },
       viewMode: isAdminRequester ? "admin-raw" : "customer-filtered",
     });

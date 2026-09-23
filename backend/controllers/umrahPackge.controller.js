@@ -11,6 +11,10 @@ import {
   fetchFullUmrahPackageById,
   fetchFullUmrahPackages,
 } from "../utils/fullUmrahPackageApi.js";
+import {
+  fetchNormalisedAlAyyanPackageById,
+  fetchNormalisedAlAyyanPackages,
+} from "./alAyyan.controller.js";
 
 const asNumber = (value, fallback = 0) => {
   const parsed = Number(value);
@@ -191,6 +195,8 @@ export const getAllPackages = async (req, res) => {
       String(req.query.includeFzPakistan || "").toLowerCase() === "true";
     const includeFullUmrahPackage =
       String(req.query.includeFullUmrahPackage || "").toLowerCase() === "true";
+    const includeAlAyyan =
+      String(req.query.includeAlAyyan || "").toLowerCase() === "true";
     const packages = await GroupTicketing.find();
     const formatted = packages.map((pkg) => ({
       ...pkg.toObject(),
@@ -198,16 +204,20 @@ export const getAllPackages = async (req, res) => {
       packageSource: "local-db",
     }));
 
-    if (!includeFzPakistan && !includeFullUmrahPackage) {
+    if (!includeFzPakistan && !includeFullUmrahPackage && !includeAlAyyan) {
       return res.json({ success: true, data: formatted });
     }
 
-    const [fzPakistanPackages, fullUmrahPackages] = await Promise.all([
-      includeFzPakistan ? fetchNormalisedFzPakistanUmrahPackages() : [],
-      includeFullUmrahPackage ? fetchFullUmrahPackages() : [],
-    ]);
+    const [fzPakistanPackages, fullUmrahPackages, alAyyanPackages] =
+      await Promise.all([
+        includeFzPakistan ? fetchNormalisedFzPakistanUmrahPackages() : [],
+        includeFullUmrahPackage ? fetchFullUmrahPackages() : [],
+        includeAlAyyan ? fetchNormalisedAlAyyanPackages() : [],
+      ]);
     const allVisibility = await PackageVisibility.find({
-      source: { $in: ["local-db", "fz-pakistan", "full-umrah-package"] },
+      source: {
+        $in: ["local-db", "fz-pakistan", "full-umrah-package", "al-ayyan"],
+      },
     });
     const visibilityMap = new Map();
     allVisibility.forEach((v) => {
@@ -218,7 +228,8 @@ export const getAllPackages = async (req, res) => {
     const combinedPackages = [
       ...formatted,
       ...fzPakistanPackages,
-      ...fullUmrahPackages,
+      // ...fullUmrahPackages,
+      ...alAyyanPackages,
     ].map((pkg) => {
       const source = pkg.packageSource || "local-db";
       const key = `${source}:${pkg.externalId || pkg.id || pkg._id}`;
@@ -237,6 +248,7 @@ export const getAllPackages = async (req, res) => {
         local: formatted.length,
         fzPakistan: fzPakistanPackages.length,
         fullUmrahPackage: fullUmrahPackages.length,
+        alAyyan: alAyyanPackages.length,
       },
     });
   } catch (error) {
@@ -413,6 +425,13 @@ export const getPackageById = async (req, res) => {
         return res
           .status(200)
           .json({ success: true, package: fullUmrahPackage });
+      }
+
+      const alAyyanPackage = await fetchNormalisedAlAyyanPackageById(id);
+      if (alAyyanPackage) {
+        return res
+          .status(200)
+          .json({ success: true, package: alAyyanPackage });
       }
 
       return res

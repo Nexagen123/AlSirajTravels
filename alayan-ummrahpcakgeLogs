@@ -1,0 +1,13 @@
+// {
+//   success: true,
+//   bookingId: 'f1f10066-c8fb-41b5-b8e7-15444cfecf6c',
+//   message: 'Package booking placed on hold successfully',
+//   data: {
+//     Message: 'Package booking placed on hold successfully',
+//     SaleReferenceKey: 'f1f10066-c8fb-41b5-b8e7-15444cfecf6c',
+//     PNRNo: 'PPLG12',
+//     PackageId: 'PEbr2bjl',
+//     PassengersCount: 1,
+//     Status: 'On_Hold',
+//     ExpiryTime: '2026-09-22 17:18:50'
+//   }

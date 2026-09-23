@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logosiraj.png";
+import logo from "../../assets/images/logosirajjj.png";
 import { travelImages } from "../../data/travelImages";
 import uaeImg from "../../assets/images/uae.webp";
 import jeddahImg from "../../assets/images/jeddah.webp";
@@ -18,10 +18,10 @@ const navLinks = [
 ];
 
 const heroGroups = [
-  { label: "UAE One Way", image: uaeImg, href: "/all-groups?type_filter=uae" },
-  { label: "KSA One Way", image: jeddahImg, href: "/all-groups?type_filter=ksa" },
+  { label: "UAE", image: uaeImg, href: "/all-groups?type_filter=uae" },
+  { label: "KSA", image: jeddahImg, href: "/all-groups?type_filter=ksa" },
   { label: "Umrah Groups", image: madinaImg, href: "/all-groups?type_filter=umrah" },
-  { label: "Oman One Way", image: mascatImg, href: "/all-groups?type_filter=oman" },
+  { label: "Oman", image: mascatImg, href: "/all-groups?type_filter=oman" },
   { label: "Qatar Groups", image: qatarImg, href: "/all-groups?type_filter=qatar" },
   { label: "UK Groups", image: ukImg, href: "/all-groups?type_filter=uk" },
 ];
@@ -274,7 +274,7 @@ export default function HeroSection() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
             {heroGroups.map((group) => (
               <Link
                 key={group.label}
@@ -292,11 +292,11 @@ export default function HeroSection() {
                     className="relative z-10 block h-full w-full object-contain object-center p-1.5 transition-transform duration-700 group-hover:scale-[1.02]"
                   />
                 </div>
-                <div className="flex items-center gap-2 p-3">
-                  <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--siraj-gold)">
-                    <Icon name="pin" className="h-4 w-4 text-(--siraj-black)" />
+                <div className="flex items-center gap-3 p-4">
+                  <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--siraj-gold)">
+                    <Icon name="pin" className="h-5 w-5 text-(--siraj-black)" />
                   </div>
-                  <p className="text-sm font-black leading-tight text-(--siraj-blue-dark)">
+                  <p className="text-base font-black leading-tight text-(--siraj-blue-dark)">
                     {group.label}
                   </p>
                 </div>

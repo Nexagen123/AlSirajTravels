@@ -1,4 +1,4 @@
-import logo from "../../assets/images/logosiraj.png";
+import logo from "../../assets/images/logosirajjj.png";
 import { travelImages } from "../../data/travelImages";
 import { CiLogin } from "react-icons/ci";
 import {
@@ -15,11 +15,15 @@ import { Globe } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/+923006666344";
 
-const quickLinks = ["Home", "Group Tickets", "Umrah Packages", "Contact Support"];
+const quickLinks = [
+  { label: "Home", href: "/" },
+  { label: "Group Tickets", href: "/all-groups" },
+  { label: "Umrah Packages", href: "/all-groups?group_type=UMRAH GROUP" },
+];
 const topPackages = [
   "Umrah Groups",
-  "UAE One Way Groups",
-  "KSA One Way Groups",
+  "UAE Groups",
+  "KSA Groups",
   "Visa Consultancy",
 ];
 
@@ -132,13 +136,16 @@ export default function Footer({ user }) {
               </h3>
               <ul className="space-y-3.5">
                 {quickLinks.map((item) => (
-                  <li key={item}>
-                    <button className="text-white/60 hover:text-white transition-colors text-xs font-medium flex items-center gap-2 group">
+                  <li key={item.label}>
+                    <Link
+                      to={item.href}
+                      className="text-white/60 hover:text-white transition-colors text-xs font-medium flex items-center gap-2 group"
+                    >
                       <ChevronTinyRight />
                       <span className="group-hover:translate-x-0.5 transition-transform">
-                        {item}
+                        {item.label}
                       </span>
-                    </button>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -216,14 +223,14 @@ export default function Footer({ user }) {
                 </a>
 
                 <a
-                  href="mailto:newalsiraj1334@gmail.com"
+                  href="mailto:alsirajtravelspk13@gmail.com"
                   className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors min-w-0"
                 >
                   <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
                     <IoMail size={13} />
                   </div>
                   <span className="text-xs font-medium truncate">
-                    newalsiraj1334@gmail.com
+                    alsirajtravelspk13@gmail.com
                   </span>
                 </a>
 

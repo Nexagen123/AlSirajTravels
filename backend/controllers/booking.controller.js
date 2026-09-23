@@ -12,6 +12,7 @@ import { bookGroupTNT } from "../utils/Travel-Network.js";
 import { submitSkyPassBooking } from "../utils/Sky-Pass.js";
 import { createFzPakistanBooking } from "./fzPakistan.controller.js";
 import { createAmmerMilatBooking } from "./ammerMilat.controller.js";
+import { createAlAyyanBooking } from "./alAyyan.controller.js";
 
 // const HOLD_DURATION = 2 * 60 * 60 * 1000;
 // -------------------------
@@ -23,6 +24,8 @@ const getFzPakistanSupplierAccountName = () =>
   getEnv("FZ_PAKISTAN_SUPPLIER_ACCOUNT_NAME", "Flying Zone Travel");
 const getAmmerMilatSupplierAccountName = () =>
   getEnv("AMMER_MILAT_SUPPLIER_ACCOUNT_NAME", "Ameer-e-Millat");
+const getAlAyyanSupplierAccountName = () =>
+  getEnv("AL_AYYAN_SUPPLIER_ACCOUNT_NAME", "Al Ayyan");
 // -------------------------
 const isLocalGroup = (groupId) => mongoose.Types.ObjectId.isValid(groupId);
 const normalizeGroupId = (groupId) => groupId?.toString();
@@ -227,7 +230,7 @@ export const createBooking = async (req, res) => {
       arrivalDate,
     } = req.body;
 
-    console.log("📥 Received Booking Data:", JSON.stringify(req.body, null, 2));
+    console.log("Received Booking Data:", JSON.stringify(req.body, null, 2));
 
     // Validation
     if (passengers.length !== totalPassengers) {
@@ -262,6 +265,7 @@ export const createBooking = async (req, res) => {
     const isSkyPassGroup = bookingSource === "skypass";
     const isFzPakistanGroup = bookingSource === FZ_PAKISTAN_SOURCE;
     const isAmmerMilatGroup = bookingSource === AMMER_MILAT_SOURCE;
+     const isAlAyyanGroup = bookingSource === "al-ayyan";
 
     // Create the booking (local DB record — har source ke liye banta hai)
     booking = await Booking.create({
@@ -287,6 +291,7 @@ export const createBooking = async (req, res) => {
       sabaoonBookingStatus: isSabaoonGroup ? "pending" : "not_applicable",
       fzPakistanBookingStatus: isFzPakistanGroup ? "pending" : "not_applicable",
       ammerMilatBookingStatus: isAmmerMilatGroup ? "pending" : "not_applicable",
+      alAyyanBookingStatus: isAlAyyanGroup ? "pending" : "not_applicable",
     });
 
     // ─── Handle Al-Haider third-party API call ───
@@ -671,6 +676,36 @@ export const createBooking = async (req, res) => {
         await booking.save();
 
         throw new Error(`Ameer-e-Millat booking failed: ${ammerMilatError.message}`);
+      }
+    }
+
+       // Create the matching booking on Al Ayyan for Al Ayyan-sourced groups.
+    if (isAlAyyanGroup) {
+      try {
+        const alAyyanResult = await createAlAyyanBooking({
+          groupId,
+          passengers,
+        });
+
+        if (!alAyyanResult.success) {
+          throw new Error(alAyyanResult.message || "Al Ayyan booking failed");
+        }
+
+        booking.alAyyanBookingId = alAyyanResult.bookingId;
+        booking.alAyyanBookingStatus = "success";
+        booking.externalBookingMessage =
+          alAyyanResult.message || "Booking created on Al Ayyan";
+        await booking.save();
+      } catch (alAyyanError) {
+        console.error("Al Ayyan API booking failed:", alAyyanError.message);
+
+        booking.alAyyanBookingStatus = "failed";
+        booking.externalBookingMessage = alAyyanError.message;
+        await booking.save().catch(() => {});
+        await Booking.findByIdAndDelete(booking._id).catch(() => {});
+        booking = null;
+
+        throw new Error(`Al Ayyan booking failed: ${alAyyanError.message}`);
       }
     }
 
@@ -1075,6 +1110,7 @@ const ledgerHiting = async (booking) => {
       "travel-network": "Travel Network",
       [FZ_PAKISTAN_SOURCE]: getFzPakistanSupplierAccountName(),
       [AMMER_MILAT_SOURCE]: getAmmerMilatSupplierAccountName(),
+      "al-ayyan": getAlAyyanSupplierAccountName(),
     };
 
     // Make sure the source exists and map it to the proper name

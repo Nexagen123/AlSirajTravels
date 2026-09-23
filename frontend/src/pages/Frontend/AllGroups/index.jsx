@@ -136,6 +136,8 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
   // Flying Zone Pakistan margin (PKR) fetched from backend
   const [fzPakistanMargin, setFzPakistanMargin] = useState(0);
   const [fullUmrahMargin, setFullUmrahMargin] = useState(0);
+  // Al-Ayyan margin (PKR) fetched from backend
+  const [alAyyanMargin, setAlAyyanMargin] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -169,9 +171,10 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
         marginRes,
         fzMarginRes,
         fullUmrahMarginRes,
+        alAyyanMarginRes,
       ] = await Promise.allSettled([
         axiosInstance.get(
-          "/umrahpackages/?includeFzPakistan=true&includeFullUmrahPackage=true",
+          "/umrahpackages/?includeFzPakistan=true&includeFullUmrahPackage=true&includeAlAyyan=true",
         ),
         axiosInstance.get("/group-ticketing"),
         axiosInstance.get("/bookings/getBookedSeats"),
@@ -182,6 +185,9 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
           data: { success: true, data: { marginAmount: 0 } },
         })),
         axiosInstance.get("/full-umrah-package-margin").catch(() => ({
+          data: { success: true, data: { marginAmount: 0 } },
+        })),
+        axiosInstance.get("/al-ayyan-umrah-margin").catch(() => ({
           data: { success: true, data: { marginAmount: 0 } },
         })),
       ]);
@@ -210,6 +216,16 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
       ) {
         setFullUmrahMargin(
           Number(fullUmrahMarginRes.value.data.data?.marginAmount) || 0,
+        );
+      }
+
+      // Load Al-Ayyan margin
+      if (
+        alAyyanMarginRes.status === "fulfilled" &&
+        alAyyanMarginRes.value.data?.success
+      ) {
+        setAlAyyanMargin(
+          Number(alAyyanMarginRes.value.data.data?.marginAmount) || 0,
         );
       }
 
@@ -321,6 +337,7 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
           const isTravelNetwork = pkg.packageSource === "travel-network";
           const isFzPakistan = pkg.packageSource === "fz-pakistan";
           const isFullUmrah = pkg.packageSource === "full-umrah-package";
+          const isAlAyyan = pkg.packageSource === "al-ayyan";
 
           // For travel network / Flying Zone / Full Umrah Package packages, apply the
           // relevant margin on top of each room price. We keep originalRooms /
@@ -341,7 +358,12 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
                     fullUmrahMarginRes.status === "fulfilled" &&
                       fullUmrahMarginRes.value.data?.data?.marginAmount,
                   ) || 0
-                : 0;
+                : isAlAyyan
+                  ? Number(
+                      alAyyanMarginRes.status === "fulfilled" &&
+                        alAyyanMarginRes.value.data?.data?.marginAmount,
+                    ) || 0
+                  : 0;
 
           const applyMarginToRooms = (roomsObj, margin) => {
             if (!margin || margin <= 0) return roomsObj;
@@ -379,7 +401,8 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
             return result;
           };
 
-          const applyMargin = isTravelNetwork || isFzPakistan || isFullUmrah;
+          const applyMargin =
+            isTravelNetwork || isFzPakistan || isFullUmrah || isAlAyyan;
           const displayRooms = applyMargin
             ? applyMarginToRooms(rooms, marginVal)
             : rooms;
@@ -458,6 +481,7 @@ export default function AllGroups({ headerType, header, searchParams, user }) {
             travelNetworkMargin: isTravelNetwork ? marginVal : 0,
             fzPakistanMargin: isFzPakistan ? marginVal : 0,
             fullUmrahMargin: isFullUmrah ? marginVal : 0,
+            alAyyanMargin: isAlAyyan ? marginVal : 0,
             metadata: {
               packageName: pkg.packageName,
               flightNumber: firstFlight.flightNo || "",

@@ -1,0 +1,58 @@
+Received Booking Data: {
+  "groupId": "Gv6DB79A",
+  "source": "al-ayyan",
+  "groupType": "Al Ayyan Group",
+  "airline": {
+    "id": null,
+    "name": "Air Arabia",
+    "logoUrl": ""
+  },
+  "sector": "SKT-SHJ",
+  "pnr": "",
+  "contactPersonName": "N/A",
+  "adultsCount": 1,
+  "childrenCount": 0,
+  "infantsCount": 0,
+  "totalPassengers": 1,
+  "pricing": {
+    "adultPrice": 95000,
+    "childPrice": 0,
+    "infantPrice": 0,
+    "adultBasePrice": 95000,
+    "childBasePrice": 0,
+    "infantBasePrice": 0,
+    "adultTotal": 95000,
+    "childTotal": 0,
+    "infantTotal": 0,
+    "grandTotal": 95000
+  },
+  "passengers": [
+    {
+      "type": "Adult",
+      "title": "Mr",
+      "givenName": "Tariq ",
+      "surName": "Abdullah ",
+      "passport": "pak818991",
+      "passportIssue": "2025-09-24",
+      "dateOfBirth": "2000-09-13",
+      "passportExpiry": "2039-09-30",
+      "nationality": "Pakistan"
+    }
+  ],
+  "flights": [
+    {
+      "flightNo": "G9057",
+      "depDate": "2026-12-15",
+      "depTime": "01:00",
+      "origin": "SKT",
+      "destination": "SHJ",
+      "arrDate": "2026-12-15",
+      "arrTime": "03:35",
+      "baggage": "20+10",
+      "meal": "No"
+    }
+  ],
+  "departureDate": "2026-12-15",
+  "arrivalDate": "2026-12-15"
+}
+ Booking process completed successfully

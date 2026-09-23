@@ -4,7 +4,7 @@ import jsPDF from "jspdf";
 import axiosInstance from "../../api/axios";
 import MaskedDatePicker from "../../components/MaskedDatePicker";
 import TopBar from "../../components/TopBar/TopBar";
-import logo from "../../assets/images/logosiraj.png";
+import logo from "../../assets/images/logosirajjj.png";
 import {
   getFrontendUserName,
   getStoredFrontendUser,

@@ -691,7 +691,16 @@ function DetailsModal({ booking, onClose, canManage, onExtendHold, onSaveDiscoun
     const packageTotals = packageDetails?.packageTotals || booking.packageData?.packageTotals;
     const packageFlights = packageDetails?.flights || booking.packageData?.flights || [];
     const packageHotels = packageDetails?.hotels || booking.packageData?.hotels || [];
-    const sourceLabel = booking.packageSource === "fz-pakistan" ? "Flying Zone Pakistan" : "Local Package";
+    const sourceLabel =
+        booking.packageSource === "fz-pakistan"
+            ? "Flying Zone Pakistan"
+            : booking.packageSource === "al-ayyan"
+                ? "Al-Ayyan"
+                : booking.packageSource === "full-umrah-package"
+                    ? "Full Umrah Package"
+                    : booking.packageSource === "travel-network"
+                        ? "Travel Network"
+                        : "Local Package";
     const sourceBadgeStyle: React.CSSProperties = {
         display: "inline-flex",
         alignItems: "center",
@@ -922,9 +931,9 @@ function DetailsModal({ booking, onClose, canManage, onExtendHold, onSaveDiscoun
                                     <span>Discount</span><strong>-PKR {totalDiscount.toLocaleString()}</strong>
                                 </div>
                             )}
-                            {["travel-network", "fz-pakistan", "full-umrah-package"].includes(booking.packageSource) && (booking.supplierDiscount ?? 0) > 0 && (
+                            {["travel-network", "fz-pakistan", "full-umrah-package", "al-ayyan"].includes(booking.packageSource) && (booking.supplierDiscount ?? 0) > 0 && (
                                 <div style={{ fontSize: "0.8rem", display: "flex", justifyContent: "space-between", marginTop: "6px", color: "#0369A1", fontWeight: 600 }}>
-                                    <span>Supplier Discount ({booking.packageSource === "fz-pakistan" ? "Flying Zone" : booking.packageSource === "full-umrah-package" ? "Full Umrah Package" : "Travel Network"})</span><strong>PKR {(booking.supplierDiscount as number).toLocaleString()}</strong>
+                                    <span>Supplier Discount ({booking.packageSource === "fz-pakistan" ? "Flying Zone" : booking.packageSource === "full-umrah-package" ? "Full Umrah Package" : booking.packageSource === "al-ayyan" ? "Al-Ayyan" : "Travel Network"})</span><strong>PKR {(booking.supplierDiscount as number).toLocaleString()}</strong>
                                 </div>
                             )}
                             <div style={{ fontSize: "0.9rem", display: "flex", justifyContent: "space-between", paddingTop: "9px", borderTop: "1px solid #E2E8F0", marginTop: "8px", fontWeight: 800, color: "#0F172A" }}>
@@ -1066,6 +1075,7 @@ function StatusModal({ modalData, onClose, onSuccess }: any) {
         "travel-network": "Travel Network",
         "fz-pakistan": "Flying Zone",
         "full-umrah-package": "Full Umrah Package",
+        "al-ayyan": "Al-Ayyan",
     };
     const supplierSourceLabel = supplierSourceLabels[modalData.booking?.packageSource as string];
     const requiresSupplierDiscount =

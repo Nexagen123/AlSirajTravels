@@ -81,7 +81,7 @@ const Header: React.FC<HeaderProps> = ({ onClick, onToggle }) => {
           <Link to="/" className="admin-logo-badge admin-logo-badge--compact lg:hidden">
             <img
               // className="dark:hidden"
-              src="./admin-portal/images/logosiraj.png"
+              src="./admin-portal/images/logosirajjj.png"
               alt="New Al Siraj Travels"
             />
             {/* <img

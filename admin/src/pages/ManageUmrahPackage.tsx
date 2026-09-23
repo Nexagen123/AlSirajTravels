@@ -100,7 +100,7 @@ interface PackageData {
   logo?: string;
 
   // Package source fields
-  packageSource?: "local-db" | "travel-network" | "fz-pakistan" | "full-umrah-package";
+  packageSource?: "local-db" | "travel-network" | "fz-pakistan" | "full-umrah-package" | "al-ayyan";
   externalId?: string | number;
   visibility?: boolean;
 }
@@ -157,7 +157,7 @@ interface UmrahBookingStatusCounts {
 interface PackageVisibility {
   packageId: string;
   isVisible: boolean;
-  source: "local-db" | "travel-network" | "fz-pakistan" | "full-umrah-package";
+  source: "local-db" | "travel-network" | "fz-pakistan" | "full-umrah-package" | "al-ayyan";
   externalId?: string | number;
 }
 
@@ -287,7 +287,7 @@ const ManageUmrahPackage = () => {
   const [pdfLoading, setPdfLoading] = useState(false);
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<"all" | "local" | "fz" | "fullUmrah">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "local" | "fz" | "fullUmrah" | "alAyyan">("all");
 
   // Visibility state - loaded from API
   const [visibilityMap, setVisibilityMap] = useState<Map<string, boolean>>(new Map());
@@ -305,6 +305,11 @@ const ManageUmrahPackage = () => {
   const [fullUmrahMarginInput, setFullUmrahMarginInput] = useState("");
   const [savingFullUmrahMargin, setSavingFullUmrahMargin] = useState(false);
 
+  // Al-Ayyan margin state - global PKR amount added on top of every room type
+  const [alAyyanMarginAmount, setAlAyyanMarginAmount] = useState(0);
+  const [alAyyanMarginInput, setAlAyyanMarginInput] = useState("");
+  const [savingAlAyyanMargin, setSavingAlAyyanMargin] = useState(false);
+
   const hasFetched = useRef(false);
 
   // Filter packages based on active tab
@@ -313,6 +318,7 @@ const ManageUmrahPackage = () => {
     if (activeTab === "local") return pkg.packageSource === "local-db" || !pkg.packageSource;
     if (activeTab === "fz") return pkg.packageSource === "fz-pakistan";
     if (activeTab === "fullUmrah") return pkg.packageSource === "full-umrah-package";
+    if (activeTab === "alAyyan") return pkg.packageSource === "al-ayyan";
     return true;
   });
 
@@ -399,7 +405,12 @@ const ManageUmrahPackage = () => {
     }
 
     try {
-      const source = activeTab === "fullUmrah" ? "full-umrah-package" : "fz-pakistan";
+      const source =
+        activeTab === "fullUmrah"
+          ? "full-umrah-package"
+          : activeTab === "alAyyan"
+            ? "al-ayyan"
+            : "fz-pakistan";
       const sourcePackages = packages.filter((pkg) => pkg.packageSource === source);
 
       const promises = sourcePackages.map((pkg) => {
@@ -423,7 +434,7 @@ const ManageUmrahPackage = () => {
         return newMap;
       });
 
-      toast.success(`${show ? "Showing" : "Hiding"} all ${source === "fz-pakistan" ? "Flying Zone" : "Full Umrah Package"} packages`);
+      toast.success(`${show ? "Showing" : "Hiding"} all ${source === "fz-pakistan" ? "Flying Zone" : source === "al-ayyan" ? "Al-Ayyan" : "Full Umrah Package"} packages`);
     } catch (error) {
       console.error("Error toggling all packages:", error);
       toast.error("Failed to update visibility for all packages");
@@ -496,12 +507,48 @@ const ManageUmrahPackage = () => {
     }
   };
 
+  // Update the global Al-Ayyan Umrah margin (PKR amount added on top of every room type)
+  const handleUpdateAlAyyanMargin = async () => {
+    if (!canUseActions) {
+      toast.error("You don't have permission to manage Umrah packages");
+      return;
+    }
+
+    const marginAmount = Number(alAyyanMarginInput);
+    if (isNaN(marginAmount) || marginAmount < 0) {
+      toast.error("Margin must be a non-negative number");
+      return;
+    }
+
+    setSavingAlAyyanMargin(true);
+    try {
+      const response = await axiosInstance.post("/al-ayyan-umrah-margin", {
+        marginAmount,
+      });
+
+      if (response.data?.success) {
+        setAlAyyanMarginAmount(marginAmount);
+        toast.success("Al-Ayyan margin updated successfully");
+      } else {
+        throw new Error(response.data?.message || "Failed to update margin");
+      }
+    } catch (error) {
+      console.error("Error updating Al-Ayyan margin:", error);
+      toast.error("Failed to update Al-Ayyan margin");
+    } finally {
+      setSavingAlAyyanMargin(false);
+    }
+  };
+
   // Get Flying Zone packages for modal
   const fzPakistanPackages = packages.filter(
     (pkg) => pkg.packageSource === "fz-pakistan"
   );
   const fullUmrahPackages = packages.filter(
     (pkg) => pkg.packageSource === "full-umrah-package"
+  );
+  const alAyyanPackages = packages.filter(
+    (pkg) => pkg.packageSource === "al-ayyan"
   );
 
   // Check if all Flying Zone packages are visible
@@ -520,6 +567,13 @@ const ManageUmrahPackage = () => {
   const areAllFullUmrahPackagesVisible = () =>
     fullUmrahPackages.length === 0 ||
     fullUmrahPackages.every((pkg) => {
+      const packageId = pkg.externalId ? String(pkg.externalId) : pkg._id;
+      return visibilityMap.get(packageId) !== false;
+    });
+
+  const areAllAlAyyanPackagesVisible = () =>
+    alAyyanPackages.length === 0 ||
+    alAyyanPackages.every((pkg) => {
       const packageId = pkg.externalId ? String(pkg.externalId) : pkg._id;
       return visibilityMap.get(packageId) !== false;
     });
@@ -543,20 +597,23 @@ const ManageUmrahPackage = () => {
           visibilityRes,
           fzMarginRes,
           fullUmrahMarginRes,
+          alAyyanMarginRes,
         ] = await Promise.allSettled([
-          axiosInstance.get("/umrahpackages/?includeFzPakistan=true&includeFullUmrahPackage=true"), // Local + external packages
+          axiosInstance.get("/umrahpackages/?includeFzPakistan=true&includeFullUmrahPackage=true&includeAlAyyan=true"), // Local + external packages
           axiosInstance.get("/group-ticketing"),
           axiosInstance.get("/bookings/getBookedSeats"),
           axiosInstance.get("/umrah-bookings/admin/all"),
           axiosInstance.get("/package-visibility").catch(() => ({ data: { success: true, data: [] } })),
           axiosInstance.get("/fz-pakistan-umrah-margin").catch(() => ({ data: { success: true, data: { marginAmount: 0 } } })),
           axiosInstance.get("/full-umrah-package-margin").catch(() => ({ data: { success: true, data: { marginAmount: 0 } } })),
+          axiosInstance.get("/al-ayyan-umrah-margin").catch(() => ({ data: { success: true, data: { marginAmount: 0 } } })),
         ]);
 
         // Handle packages
         let localPackages: PackageData[] = [];
         let fzPackages: PackageData[] = [];
         let fullUmrahPackages: PackageData[] = [];
+        let alAyyanPackages: PackageData[] = [];
 
         if (packageRes.status === "fulfilled" && packageRes.value.data?.success) {
           const data = packageRes.value.data.data || [];
@@ -578,6 +635,15 @@ const ManageUmrahPackage = () => {
             .map((pkg: PackageData) => ({
               ...pkg,
               packageSource: "full-umrah-package",
+              externalId: pkg.externalId ?? pkg.id ?? pkg._id,
+              _id: String(pkg.externalId ?? pkg.id ?? pkg._id ?? ""),
+            }));
+
+          alAyyanPackages = data
+            .filter((pkg: PackageData) => pkg.packageSource === "al-ayyan")
+            .map((pkg: PackageData) => ({
+              ...pkg,
+              packageSource: "al-ayyan",
               externalId: pkg.externalId ?? pkg.id ?? pkg._id,
               _id: String(pkg.externalId ?? pkg.id ?? pkg._id ?? ""),
             }));
@@ -654,7 +720,7 @@ const ManageUmrahPackage = () => {
         }
 
         // Combine all packages
-        const allPackages = [...localPackages, ...fzPackages, ...fullUmrahPackages];
+        const allPackages = [...localPackages, ...fzPackages, ...fullUmrahPackages, ...alAyyanPackages];
         setPackages(allPackages);
 
         // Handle visibility settings
@@ -682,6 +748,13 @@ const ManageUmrahPackage = () => {
           setFullUmrahMarginInput(String(marginAmount));
         }
 
+        // Handle Al-Ayyan margin
+        if (alAyyanMarginRes.status === "fulfilled" && alAyyanMarginRes.value.data?.success) {
+          const marginAmount = Number(alAyyanMarginRes.value.data.data?.marginAmount) || 0;
+          setAlAyyanMarginAmount(marginAmount);
+          setAlAyyanMarginInput(String(marginAmount));
+        }
+
       } catch (error) {
         console.error("Error fetching packages:", error);
         toast.error("Failed to fetch packages");
@@ -703,8 +776,8 @@ const ManageUmrahPackage = () => {
     }
 
     const pkg = packages.find((p) => p._id === packageId);
-    if (pkg?.packageSource === "fz-pakistan") {
-      toast.warning("Flying Zone packages cannot be edited");
+    if (pkg?.packageSource === "fz-pakistan" || pkg?.packageSource === "al-ayyan") {
+      toast.warning("External packages cannot be edited");
       return;
     }
 
@@ -742,8 +815,8 @@ const ManageUmrahPackage = () => {
     }
 
     const pkg = packages.find((p) => p._id === id);
-    if (pkg?.packageSource === "fz-pakistan") {
-      toast.warning("Flying Zone packages cannot be deleted");
+    if (pkg?.packageSource === "fz-pakistan" || pkg?.packageSource === "al-ayyan") {
+      toast.warning("External packages cannot be deleted");
       return;
     }
 
@@ -877,11 +950,25 @@ const ManageUmrahPackage = () => {
   const localCount = packages.filter((p) => p.packageSource === "local-db" || !p.packageSource).length;
   const fzCount = packages.filter((p) => p.packageSource === "fz-pakistan").length;
   const fullUmrahCount = packages.filter((p) => p.packageSource === "full-umrah-package").length;
-  const visibilityPackages = activeTab === "fullUmrah" ? fullUmrahPackages : fzPakistanPackages;
-  const activeExternalLabel = activeTab === "fullUmrah" ? "Full Umrah Package" : "Flying Zone";
-  const allActiveExternalVisible = activeTab === "fullUmrah"
-    ? areAllFullUmrahPackagesVisible()
-    : areAllFzPackagesVisible();
+  const alAyyanCount = packages.filter((p) => p.packageSource === "al-ayyan").length;
+  const visibilityPackages =
+    activeTab === "fullUmrah"
+      ? fullUmrahPackages
+      : activeTab === "alAyyan"
+        ? alAyyanPackages
+        : fzPakistanPackages;
+  const activeExternalLabel =
+    activeTab === "fullUmrah"
+      ? "Full Umrah Package"
+      : activeTab === "alAyyan"
+        ? "Al-Ayyan"
+        : "Flying Zone";
+  const allActiveExternalVisible =
+    activeTab === "fullUmrah"
+      ? areAllFullUmrahPackagesVisible()
+      : activeTab === "alAyyan"
+        ? areAllAlAyyanPackagesVisible()
+        : areAllFzPackagesVisible();
 
   const getPackageSeatStats = (pkg: PackageData) => {
     const selectedGroupTicketId = getId(
@@ -994,7 +1081,7 @@ const ManageUmrahPackage = () => {
             </span>
           </button>
 
-          <button
+          {/* <button
             onClick={() => setActiveTab("fullUmrah")}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${activeTab === "fullUmrah"
               ? "bg-amber-600 text-white"
@@ -1005,11 +1092,24 @@ const ManageUmrahPackage = () => {
             <span className="ml-1.5 rounded-full bg-white/20 px-2 py-0.5 text-xs">
               {fullUmrahCount}
             </span>
+          </button> */}
+
+          <button
+            onClick={() => setActiveTab("alAyyan")}
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition ${activeTab === "alAyyan"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/5 dark:text-gray-300 dark:hover:bg-white/10"
+              }`}
+          >
+            Al-Ayyan
+            <span className="ml-1.5 rounded-full bg-white/20 px-2 py-0.5 text-xs">
+              {alAyyanCount}
+            </span>
           </button>
         </div>
 
         {/* Visibility control for external packages */}
-        {(activeTab === "fz" || activeTab === "fullUmrah") && visibilityPackages.length > 0 && (
+        {(activeTab === "fz" || activeTab === "fullUmrah" || activeTab === "alAyyan") && visibilityPackages.length > 0 && (
           <div className="ml-auto flex flex-wrap items-center gap-2">
             {activeTab === "fz" && <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1.5 dark:border-white/10 dark:bg-white/5">
               <label className="text-xs font-medium text-gray-600 dark:text-gray-400">
@@ -1047,6 +1147,25 @@ const ManageUmrahPackage = () => {
                 className="rounded-md bg-blue-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
               >
                 {savingFullUmrahMargin ? "Saving..." : "Update Margin"}
+              </button>
+            </div>}
+            {activeTab === "alAyyan" && <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1.5 dark:border-white/10 dark:bg-white/5">
+              <label className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                Margin (PKR):
+              </label>
+              <input
+                type="number"
+                min={0}
+                value={alAyyanMarginInput}
+                onChange={(event) => setAlAyyanMarginInput(event.target.value)}
+                className="w-24 rounded-md border border-gray-200 bg-white px-2 py-1 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 dark:border-white/10 dark:bg-white/5 dark:text-gray-100"
+              />
+              <button
+                onClick={handleUpdateAlAyyanMargin}
+                disabled={savingAlAyyanMargin}
+                className="rounded-md bg-blue-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+              >
+                {savingAlAyyanMargin ? "Saving..." : "Update Margin"}
               </button>
             </div>}
             <button
@@ -1157,9 +1276,11 @@ const ManageUmrahPackage = () => {
                         ? "No Flying Zone packages available"
                         : activeTab === "fullUmrah"
                           ? "No Full Umrah Package packages available"
-                          : activeTab === "local"
-                            ? "No local packages found"
-                            : "No packages found"}
+                          : activeTab === "alAyyan"
+                            ? "No Al-Ayyan packages available"
+                            : activeTab === "local"
+                              ? "No local packages found"
+                              : "No packages found"}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -1171,7 +1292,8 @@ const ManageUmrahPackage = () => {
                   const seatStats = getPackageSeatStats(pkg);
                   const isFzPackage = pkg.packageSource === "fz-pakistan";
                   const isFullUmrahPackage = pkg.packageSource === "full-umrah-package";
-                  const isExternalPackage = isFzPackage || isFullUmrahPackage;
+                  const isAlAyyanPackage = pkg.packageSource === "al-ayyan";
+                  const isExternalPackage = isFzPackage || isFullUmrahPackage || isAlAyyanPackage;
                   const displayId = isExternalPackage ? pkg.externalId || pkg.id : pkg._id;
 
                   // For Flying Zone packages, check the visibility map (default visible)
@@ -1329,6 +1451,25 @@ const ManageUmrahPackage = () => {
                                   </td>
                                 </tr>
                               )}
+                              {isAlAyyanPackage && alAyyanMarginAmount > 0 && (
+                                <tr className="bg-blue-50 dark:bg-blue-900/10">
+                                  <td className="px-1 py-1 font-extrabold text-blue-600 sm:px-3 sm:py-2">
+                                    +Margin
+                                  </td>
+                                  <td className="px-1 py-1 font-bold text-blue-600 sm:px-3 sm:py-2">
+                                    {formatMoney((pkg.packageTotals?.double || 0) + alAyyanMarginAmount)}
+                                  </td>
+                                  <td className="px-1 py-1 font-bold text-blue-600 sm:px-3 sm:py-2">
+                                    {formatMoney((pkg.packageTotals?.triple || 0) + alAyyanMarginAmount)}
+                                  </td>
+                                  <td className="px-1 py-1 font-bold text-blue-600 sm:px-3 sm:py-2">
+                                    {formatMoney((pkg.packageTotals?.quad || 0) + alAyyanMarginAmount)}
+                                  </td>
+                                  <td className="px-1 py-1 font-bold text-blue-600 sm:px-3 sm:py-2">
+                                    {formatMoney((pkg.packageTotals?.shared || 0) + alAyyanMarginAmount)}
+                                  </td>
+                                </tr>
+                              )}
                             </tbody>
                           </table>
                         </div>
@@ -1447,7 +1588,7 @@ const ManageUmrahPackage = () => {
                       </TableCell>
 
                       <TableCell className="px-2 py-3 sm:px-4 sm:py-5">
-                        {isFzPackage ? (
+                        {(isFzPackage || isAlAyyanPackage) ? (
                           <label className="relative inline-flex cursor-pointer items-center">
                             <input
                               type="checkbox"
@@ -1496,11 +1637,11 @@ const ManageUmrahPackage = () => {
                           </button>
 
                           <div className="flex gap-1.5 sm:gap-2">
-                            {isFzPackage ? (
+                            {(isFzPackage || isAlAyyanPackage) ? (
                               <button
                                 disabled
                                 className="flex flex-1 justify-center rounded-lg bg-gray-100 p-1.5 text-gray-400 cursor-not-allowed sm:p-2 dark:bg-white/5"
-                                title="Flying Zone packages cannot be edited"
+                                title="External packages cannot be edited"
                               >
                                 <PencilIcon className="h-3 w-3 sm:h-4 sm:w-4" />
                               </button>
@@ -1527,14 +1668,14 @@ const ManageUmrahPackage = () => {
 
                             <button
                               onClick={() => handleDelete(pkg._id)}
-                              disabled={!canUseActions || isFzPackage}
-                              className={`flex flex-1 justify-center rounded-lg p-1.5 transition sm:p-2 ${isFzPackage
+                              disabled={!canUseActions || isFzPackage || isAlAyyanPackage}
+                              className={`flex flex-1 justify-center rounded-lg p-1.5 transition sm:p-2 ${(isFzPackage || isAlAyyanPackage)
                                 ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-white/5"
                                 : "bg-red-50 text-red-600 hover:bg-red-600 hover:text-white dark:bg-red-500/10"
                                 } disabled:cursor-not-allowed disabled:opacity-40`}
                               title={
-                                isFzPackage
-                                  ? "Flying Zone packages cannot be deleted"
+                                (isFzPackage || isAlAyyanPackage)
+                                  ? "External packages cannot be deleted"
                                   : canUseActions
                                     ? "Delete"
                                     : "You don't have permission to manage Umrah packages"

@@ -64,7 +64,7 @@ const groupStyles = {
   "Baku Packages": {
     accent: "linear-gradient(135deg,#0891b2,#2563eb)",
     icon: MapPinned,
-    tag: "Baku",
+    tag: "Tour",
   },
   "Umrah Groups (Only Seats)": {
     accent: "linear-gradient(135deg,#be123c,#f97316)",

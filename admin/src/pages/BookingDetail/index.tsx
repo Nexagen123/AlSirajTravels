@@ -80,7 +80,9 @@ interface Booking {
     ammerMilatBookingId?: string | null
     ammerMilatBookingStatus?: 'pending' | 'success' | 'failed' | 'not_applicable' | null
     ammerMilatErrorMessage?: string | null
-    source?: 'admin' | 'al-haider' | 'travel-network' | 'fz-pakistan' | 'ammer-milat' | string
+    alAyyanBookingId?: string | null
+    alAyyanBookingStatus?: 'pending' | 'success' | 'failed' | 'not_applicable' | null
+    source?: 'admin' | 'al-haider' | 'travel-network' | 'fz-pakistan' | 'ammer-milat' | 'al-ayyan' | string
     groupTicketData?: {
         supplierName?: string | null
         groupName?: string
@@ -388,6 +390,12 @@ export default function BookingDetail() {
             return {
                 label: "Ameer-e-Millat",
                 className: "border-rose-200 bg-rose-50 text-rose-700",
+            };
+        }
+        if (source === "al-ayyan") {
+            return {
+                label: "Al-Ayyan",
+                className: "border-indigo-200 bg-indigo-50 text-indigo-700",
             };
         }
         return {

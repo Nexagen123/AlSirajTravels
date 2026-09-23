@@ -1362,6 +1362,9 @@ export default function BookingForm({ user }) {
                       Expiry
                     </th>
                     <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider">
+                      Issue Date
+                    </th>
+                    <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider">
                       Nationality
                     </th>
                     <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider rounded-tr-lg">
@@ -1517,6 +1520,20 @@ export default function BookingForm({ user }) {
                               </div>
                             )}
                           </div>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <MaskedDatePicker
+                            value={passenger.passportIssue}
+                            onChange={(date) =>
+                              handlePassengerChange(
+                                index,
+                                "passportIssue",
+                                date,
+                              )
+                            }
+                            size="small"
+                            maxDate={new Date()}
+                          />
                         </td>
                         <td className="px-3 py-2.5">
                           <input
@@ -1822,6 +1839,9 @@ export default function BookingForm({ user }) {
                         Expiry
                       </th>
                       <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider">
+                        Issue Date
+                      </th>
+                      <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider">
                         Nationality
                       </th>
                       <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider">
@@ -1858,6 +1878,9 @@ export default function BookingForm({ user }) {
                         </td>
                         <td className="px-4 py-3">
                           {formatDateForDisplay(p.passportExpiry)}
+                        </td>
+                        <td className="px-4 py-3">
+                          {formatDateForDisplay(p.passportIssue)}
                         </td>
                         <td className="px-4 py-3">{p.nationality}</td>
                         <td className="px-4 py-3">

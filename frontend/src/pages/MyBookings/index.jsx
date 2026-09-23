@@ -179,6 +179,12 @@ export default function MyBookings() {
         className: "bg-orange-50 text-slate-600 border border-slate-300",
       };
     }
+    if (source === "al-ayyan") {
+      return {
+        label: "Al-Ayyan",
+        className: "bg-orange-50 text-slate-600 border border-slate-300",
+      };
+    }
     return {
       label: "Own",
       className: "bg-orange-50 text-slate-600 border border-slate-300",

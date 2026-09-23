@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-import logo from "../assets/images/logosiraj-transparent.png";
+import logo from "../assets/images/logosirajjj.png";
 import { useAuth } from "../context/AuthContext";
 import { hasPermission } from "../utils/permissions";
 

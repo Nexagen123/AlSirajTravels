@@ -39,12 +39,14 @@ interface Booking {
     cancelledAt?: string | null
     sabaoonTransactionId?: number | null
     sabaoonBookingStatus?: 'pending' | 'success' | 'failed' | 'not_applicable' | null
-    source?: 'admin' | 'al-haider' | 'travel-network' | 'fz-pakistan' | 'ammer-milat' | string
+    source?: 'admin' | 'al-haider' | 'travel-network' | 'fz-pakistan' | 'ammer-milat' | 'al-ayyan' | string
     fzPakistanBookingId?: string | null
     fzPakistanBookingStatus?: 'pending' | 'success' | 'failed' | 'not_applicable' | null
     ammerMilatBookingId?: string | null
     ammerMilatBookingStatus?: 'pending' | 'success' | 'failed' | 'not_applicable' | null
     ammerMilatErrorMessage?: string | null
+    alAyyanBookingId?: string | null
+    alAyyanBookingStatus?: 'pending' | 'success' | 'failed' | 'not_applicable' | null
     groupTicketData?: {
         buyingAdultPrice: number
         buyingChildPrice: number
@@ -84,6 +86,12 @@ const getSourceBadge = (source?: string) => {
         return {
             label: "Ameer-e-Millat",
             className: "border-rose-200 bg-rose-50 text-rose-700",
+        };
+    }
+    if (source === "al-ayyan") {
+        return {
+            label: "Al-Ayyan",
+            className: "border-indigo-200 bg-indigo-50 text-indigo-700",
         };
     }
     return {
@@ -464,6 +472,19 @@ const BookingsTable = memo(({ bookings, getStatusBadge, formatDate, navigate, ti
                                                     title={booking.ammerMilatBookingStatus === "failed" ? (booking.ammerMilatErrorMessage || "") : ""}
                                                 >
                                                     {booking.ammerMilatBookingStatus === "failed" ? "AMT Failed" : "AMT"}
+                                                </span>
+                                            )}
+
+                                            {booking.source === "al-ayyan" && (
+                                                <span
+                                                    className={`ml-2 inline-block px-2 py-1 rounded text-[10px] font-semibold ${booking.alAyyanBookingStatus === "success"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : booking.alAyyanBookingStatus === "failed"
+                                                            ? "bg-red-100 text-red-700"
+                                                            : "bg-yellow-100 text-yellow-700"
+                                                        }`}
+                                                >
+                                                    {booking.alAyyanBookingStatus === "failed" ? "Al Ayyan Failed" : "Al Ayyan"}
                                                 </span>
                                             )}
                                         </span>

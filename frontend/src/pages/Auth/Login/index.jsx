@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../../api/axios";
 import { toast } from "react-toastify";
-import logo from "../../../assets/images/logosiraj.png";
+import logo from "../../../assets/images/logosirajjj.png";
 import { travelImages } from "../../../data/travelImages";
 import {
   Mail,

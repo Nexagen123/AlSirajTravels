@@ -17,19 +17,40 @@ import ActivityLog from "../models/activitylogs.js";
 import TravelNetworkMargin from "../models/TravelNetworkMargin.js";
 import FzPakistanUmrahMargin from "../models/FzPakistanUmrahMargin.js";
 import FullUmrahPackageMargin from "../models/FullUmrahPackageMargin.js";
+import AlAyyanUmrahMargin from "../models/AlAyyanUmrahMargin.js";
 import {
   createFzPakistanUmrahBooking,
   fetchFzPakistanAdminProfile,
 } from "./fzPakistan.controller.js";
+import { createAlAyyanPackageBooking } from "./alAyyan.controller.js";
 import { sendBookingConfirmationEmail } from "../utils/emailService.js";
 import { FULL_UMRAH_PACKAGE_SOURCE } from "../utils/fullUmrahPackageApi.js";
 
 const FZ_PAKISTAN_SOURCE = "fz-pakistan";
+const AL_AYYAN_SOURCE = "al-ayyan";
 const FULL_UMRAH_SUPPLIER_ACCOUNT_NAME = () =>
   getEnv("FULL_UMRAH_PACKAGE_SUPPLIER_ACCOUNT_NAME", "Full Umrah Package");
 const getEnv = (key, fallback = "") => (process.env[key] || fallback).trim();
 const getFzPakistanSupplierAccountName = () =>
   getEnv("FZ_PAKISTAN_SUPPLIER_ACCOUNT_NAME", "Flying Zone Travel");
+const getAlAyyanSupplierAccountName = () =>
+  getEnv("AL_AYYAN_SUPPLIER_ACCOUNT_NAME", "Al Ayyan");
+
+// Al Ayyan's BookPackage endpoint expects one of these exact reservation
+// type strings, keyed by our internal roomType values.
+const ROOM_TYPE_TO_AL_AYYAN_RESERVATION_TYPE = {
+  shared: "Sharing",
+  sharing: "Sharing",
+  double: "Double",
+  triple: "Triple",
+  quad: "Quad",
+};
+const toAlAyyanReservationType = (roomType) =>
+  ROOM_TYPE_TO_AL_AYYAN_RESERVATION_TYPE[
+    String(roomType || "")
+      .trim()
+      .toLowerCase()
+  ] || "Double";
 
 const parseJsonObjectField = (value, fallback = {}) => {
   if (typeof value === "string") {
@@ -125,6 +146,7 @@ const parsePassengers = (body) => {
 export const createUmrahBooking = async (req, res) => {
   try {
     const parsedData = parseFormData(req.body);
+    console.log(parsedData)
     const passengers = parsePassengers(req.body);
 
     // Validate passengers exist
@@ -223,6 +245,8 @@ export const createUmrahBooking = async (req, res) => {
       expiresAt,
       fzPakistanBookingStatus:
         bookingSource === FZ_PAKISTAN_SOURCE ? "pending" : "not_applicable",
+      alAyyanBookingStatus:
+        bookingSource === AL_AYYAN_SOURCE ? "pending" : "not_applicable",
     };
 
     const booking = await UmrahPackageBooking.create(bookingData);
@@ -424,6 +448,37 @@ export const createUmrahBooking = async (req, res) => {
       }
     }
 
+    // Hit Al Ayyan booking API if package source is al-ayyan
+    if (bookingSource === AL_AYYAN_SOURCE && packageData) {
+      try {
+        const alAyyanResult = await createAlAyyanPackageBooking({
+          packageId: booking.packageId,
+          reservationType: toAlAyyanReservationType(booking.roomType),
+          passengers: booking.passengers,
+        });
+        console.log(alAyyanResult)
+
+
+        if (!alAyyanResult.success) {
+          throw new Error(
+            alAyyanResult.message || "Al Ayyan Umrah booking failed",
+          );
+        }
+
+        booking.alAyyanBookingId = alAyyanResult.bookingId;
+        booking.alAyyanBookingStatus = "success";
+        booking.externalBookingMessage =
+          alAyyanResult.message || "Umrah booking created on Al Ayyan";
+        await booking.save();
+      } catch (err) {
+        await UmrahPackageBooking.findByIdAndDelete(booking._id);
+        return res.status(400).json({
+          success: false,
+          message: `Al Ayyan Umrah booking failed: ${err.message}`,
+        });
+      }
+    }
+
     await ActivityLog.create({
       user: req.user._id,
       type: "UmrahBooking",
@@ -575,7 +630,8 @@ export const getMyBookings = async (req, res) => {
         booking.externalSource = "travel-network";
       } else if (
         booking.packageSource === FZ_PAKISTAN_SOURCE ||
-        booking.packageSource === FULL_UMRAH_PACKAGE_SOURCE
+        booking.packageSource === FULL_UMRAH_PACKAGE_SOURCE ||
+        booking.packageSource === AL_AYYAN_SOURCE
       ) {
         booking.isExternalPackage = true;
         booking.externalSource = booking.packageSource;
@@ -673,11 +729,18 @@ export const getAllBookingsAdmin = async (req, res) => {
           "This package is from travel network. Please fetch details from external API.";
       } else if (
         booking.packageSource === FZ_PAKISTAN_SOURCE ||
-        booking.packageSource === FULL_UMRAH_PACKAGE_SOURCE
+        booking.packageSource === FULL_UMRAH_PACKAGE_SOURCE ||
+        booking.packageSource === AL_AYYAN_SOURCE
       ) {
         booking.isExternalPackage = true;
         booking.externalSource = booking.packageSource;
-        booking._externalPackageNote = `This package is from ${booking.packageSource === FULL_UMRAH_PACKAGE_SOURCE ? "Full Umrah Package" : "Flying Zone Pakistan"}. Details are stored from the external booking payload.`;
+        booking._externalPackageNote = `This package is from ${
+          booking.packageSource === FULL_UMRAH_PACKAGE_SOURCE
+            ? "Full Umrah Package"
+            : booking.packageSource === AL_AYYAN_SOURCE
+              ? "Al Ayyan"
+              : "Flying Zone Pakistan"
+        }. Details are stored from the external booking payload.`;
       }
 
       return booking;
@@ -1454,8 +1517,12 @@ export const updateOverallStatus = async (req, res) => {
     const isTravelNetwork = packageSource === "travel-network";
     const isFzPakistanPackage = packageSource === FZ_PAKISTAN_SOURCE;
     const isFullUmrahPackage = packageSource === FULL_UMRAH_PACKAGE_SOURCE;
+    const isAlAyyanPackage = packageSource === AL_AYYAN_SOURCE;
     const isExternalPackage =
-      isTravelNetwork || isFzPakistanPackage || isFullUmrahPackage;
+      isTravelNetwork ||
+      isFzPakistanPackage ||
+      isFullUmrahPackage ||
+      isAlAyyanPackage;
 
     // =========================================
     // GET LINKED PACKAGE (only for non-travel-network bookings)
@@ -1519,10 +1586,17 @@ export const updateOverallStatus = async (req, res) => {
       // Travel Network supplier is CREDITED with the original price (without margin)
       // Margin + any supplier discount → Umrah Income
       // =========================================
-      if (isFzPakistanPackage || isFullUmrahPackage) {
+      if (isFzPakistanPackage || isFullUmrahPackage || isAlAyyanPackage) {
         const supplierAccountName = isFzPakistanPackage
           ? getFzPakistanSupplierAccountName()
-          : FULL_UMRAH_SUPPLIER_ACCOUNT_NAME();
+          : isAlAyyanPackage
+            ? getAlAyyanSupplierAccountName()
+            : FULL_UMRAH_SUPPLIER_ACCOUNT_NAME();
+        const supplierLabel = isFzPakistanPackage
+          ? "Flying Zone Pakistan"
+          : isAlAyyanPackage
+            ? "Al Ayyan"
+            : "Full Umrah Package";
         const fzPakistanAcc = accounts.find(
           (acc) => acc.account_name === supplierAccountName,
         );
@@ -1558,7 +1632,9 @@ export const updateOverallStatus = async (req, res) => {
           ? await FzPakistanUmrahMargin.findOne({ type: "umrah" })
           : isFullUmrahPackage
             ? await FullUmrahPackageMargin.findOne({ type: "umrah" })
-            : null;
+            : isAlAyyanPackage
+              ? await AlAyyanUmrahMargin.findOne({ type: "umrah" })
+              : null;
         const fzMarginPerPax = Math.max(
           0,
           Number(fzMarginRecord?.marginAmount) || 0,
@@ -1630,7 +1706,7 @@ export const updateOverallStatus = async (req, res) => {
             account: customerAccountId,
             debit: debitAmount,
             credit: 0,
-            description: `Umrah Package (${isFzPakistanPackage ? "Flying Zone Pakistan" : "Full Umrah Package"}), ${paxName} (${pax.type}) - ${booking.bookingNumber}`,
+            description: `Umrah Package (${supplierLabel}), ${paxName} (${pax.type}) - ${booking.bookingNumber}`,
           });
 
           // Supplier cost = original Flying Zone price (without our margin).
@@ -1654,7 +1730,7 @@ export const updateOverallStatus = async (req, res) => {
             account: fzPakistanAccountId,
             debit: 0,
             credit: finalSupplierCost,
-            description: `${isFzPakistanPackage ? "Flying Zone Pakistan" : "Full Umrah Package"} Umrah Expense - ${booking.bookingNumber}`,
+            description: `${supplierLabel} Umrah Expense - ${booking.bookingNumber}`,
           });
         }
 
@@ -1665,7 +1741,7 @@ export const updateOverallStatus = async (req, res) => {
             account: umrahIncomeAccountId,
             debit: 0,
             credit: profitOrLoss,
-            description: `Umrah Profit (${isFzPakistanPackage ? "Flying Zone Pakistan" : "Full Umrah Package"}) - ${booking.bookingNumber}`,
+            description: `Umrah Profit (${supplierLabel}) - ${booking.bookingNumber}`,
           });
         }
 
@@ -1674,7 +1750,7 @@ export const updateOverallStatus = async (req, res) => {
             account: umrahIncomeAccountId,
             debit: Math.abs(profitOrLoss),
             credit: 0,
-            description: `Umrah Loss (${isFzPakistanPackage ? "Flying Zone Pakistan" : "Full Umrah Package"}) - ${booking.bookingNumber}`,
+            description: `Umrah Loss (${supplierLabel}) - ${booking.bookingNumber}`,
           });
         }
 
@@ -2238,6 +2314,10 @@ export const updateOverallStatus = async (req, res) => {
     if (isFzPakistanPackage && status === "Cancelled") {
       booking.externalBookingMessage =
         "Booking cancelled on our side. Please verify/cancel it on the Flying Zone portal if required.";
+    }
+    if (isAlAyyanPackage && status === "Cancelled") {
+      booking.externalBookingMessage =
+        "Booking cancelled on our side. Please verify/cancel it on the Al Ayyan portal if required.";
     }
     booking.expiresAt =
       status === "On Hold" || status === "Pending"

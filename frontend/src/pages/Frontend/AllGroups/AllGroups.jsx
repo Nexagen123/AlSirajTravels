@@ -15,7 +15,6 @@ import citiesData from "./cities.json";
 
 const TYPE_TO_CATEGORY = {
   "UAE ONE WAY GROUP": "uae",
-  "ONE WAY GROUP": "ksa",
   "KSA ONE WAY GROUP": "ksa",
   "OMAN ONE WAY GROUP": "oman",
   "KUWAIT ONE WAY GROUP": "kuwait",
@@ -321,6 +320,48 @@ const parseSectorIntoFlights = (sector) => {
   return flights;
 };
 
+const getDisplayFlightLegs = (group = {}) => {
+  const details = Array.isArray(group.details) ? group.details : [];
+
+  if (details.length > 0) {
+    return details;
+  }
+
+  const fallbackLegs = parseSectorIntoFlights(group.sector || "");
+
+  if (fallbackLegs.length > 0) {
+    return fallbackLegs.map((leg, index) => ({
+      sr: index + 1,
+      flight_no: group.flight_no || group.flightNo || "",
+      dep_date: group.dept_date || group.dep_date || group.flight_date || "",
+      flight_date: group.dept_date || group.dep_date || group.flight_date || "",
+      dept_time: group.dept_time || group.dep_time || "",
+      origin: leg.origin,
+      destination: leg.destination,
+      arv_date: group.arv_date || group.arr_date || "",
+      arv_time: group.arv_time || group.arr_time || "",
+      baggage: group.baggage || "",
+      meal: group.meal || "",
+    }));
+  }
+
+  return [
+    {
+      sr: 1,
+      flight_no: group.flight_no || group.flightNo || "",
+      dep_date: group.dept_date || group.dep_date || group.flight_date || "",
+      flight_date: group.dept_date || group.dep_date || group.flight_date || "",
+      dept_time: group.dept_time || group.dep_time || "",
+      origin: "",
+      destination: "",
+      arv_date: group.arv_date || group.arr_date || "",
+      arv_time: group.arv_time || group.arr_time || "",
+      baggage: group.baggage || "",
+      meal: group.meal || "",
+    },
+  ];
+};
+
 const getCategoryFromGroup = (group = {}) => {
   const type = String(group?.type || "")
     .toUpperCase()
@@ -336,19 +377,18 @@ const getCategoryFromGroup = (group = {}) => {
 // category keys below before matching against the selected button. ─────────
 const TYPE_FILTER_BUTTONS = [
   { value: "all", label: "All Types" },
-  { value: "uae", label: "UAE One Way" },
-  { value: "ksa", label: "KSA One Way" },
-  { value: "oman", label: "Oman One Way" },
+  { value: "uae", label: "UAE" },
+  { value: "ksa", label: "KSA" },
+  { value: "oman", label: "Oman" },
   { value: "kuwait", label: "Kuwait" },
   { value: "baku", label: "Baku" },
-  { value: "bahrain", label: "Bahrain One Way" },
+  { value: "bahrain", label: "Bahrain" },
   { value: "umrah", label: "Umrah" },
 ];
 
 const EXACT_TYPE_TO_FILTER_CATEGORY = {
   // API / travel-network style
   "UAE ONE WAY GROUP": "uae",
-  "ONE WAY GROUP": "ksa",
   "KSA ONE WAY GROUP": "ksa",
   "OMAN ONE WAY GROUP": "oman",
   "KUWAIT ONE WAY GROUP": "kuwait",
@@ -371,6 +411,55 @@ const EXACT_TYPE_TO_FILTER_CATEGORY = {
   "KUWAIT GROUPS": "kuwait",
   "QATAR GROUPS": "qatar",
   "UK GROUPS": "uk",
+};
+
+const ROUTE_FILTER_AIRPORTS = {
+  uae: new Set(["DXB", "SHJ", "AUH", "DWC", "RKT", "AAN"]),
+  ksa: new Set([
+    "JED",
+    "MED",
+    "RUH",
+    "DMM",
+    "TIF",
+    "AHB",
+    "TUU",
+    "HAS",
+    "YNB",
+    "EAM",
+    "GIZ",
+    "ELQ",
+  ]),
+  oman: new Set(["MCT", "SLL"]),
+  kuwait: new Set(["KWI"]),
+  baku: new Set(["GYD"]),
+  bahrain: new Set(["BAH"]),
+};
+
+const getRouteFilterCategory = (group = {}) => {
+  const codes = new Set(
+    formatSectorToIATA(String(group?.sector || "").toUpperCase())
+      .split("-")
+      .map((part) => toDisplayIATA(part).toUpperCase())
+      .filter(Boolean),
+  );
+
+  if (Array.isArray(group?.details)) {
+    group.details.forEach((flight) => {
+      [flight?.origin, flight?.destination, flight?.sectorFrom, flight?.sectorTo]
+        .map(toDisplayIATA)
+        .filter(Boolean)
+        .forEach((code) => codes.add(code.toUpperCase()));
+    });
+  }
+
+  for (const category of ["uae", "ksa", "oman", "kuwait", "baku", "bahrain"]) {
+    const airports = ROUTE_FILTER_AIRPORTS[category];
+    if ([...codes].some((code) => airports.has(code))) {
+      return category;
+    }
+  }
+
+  return null;
 };
 
 const getUrlTypeFilter = (params) => {
@@ -507,8 +596,10 @@ const getTypeFilterCategory = (group = {}) => {
     return "oman";
   if (raw.includes("UK") || raw.includes("UNITED KINGDOM")) return "uk";
   if (raw.includes("UMRAH")) return "umrah";
-  if (raw.includes("KSA") || raw.includes("SAUDI") || raw === "ONE WAY GROUP")
-    return "ksa";
+  if (raw.includes("KSA") || raw.includes("SAUDI")) return "ksa";
+
+  const routeCategory = getRouteFilterCategory(group);
+  if (routeCategory) return routeCategory;
 
   return null;
 };
@@ -1622,7 +1713,7 @@ export default function AllGroupsPackages({
                   sectorParts[sectorParts.length - 1] || data.sector,
                 );
                 const hasMultiLeg = data.groups.some(
-                  (g) => g.details && g.details.length > 1,
+                  (g) => getDisplayFlightLegs(g).length > 1,
                 );
 
                 return (
@@ -1747,7 +1838,7 @@ export default function AllGroupsPackages({
                             >
                               Meal
                             </th>
-                            {hasMultiLeg && (
+                            {false && hasMultiLeg && (
                               <th
                                 className="text-center whitespace-nowrap"
                                 style={{
@@ -1795,17 +1886,13 @@ export default function AllGroupsPackages({
                             })
                             .map((group, rowIdx) => {
                               const seatCount = getSeatCount(group);
-                              const details = group.details || [];
-                              const flight = details[0];
-                              const lastFlight = details[details.length - 1];
-                              const isMultiLeg = details.length > 1;
-                              // Fallback legs parsed straight from the sector
-                              // string when the API didn't provide a details
-                              // array (mirrors ApiGroups.tsx behaviour).
-                              const sectorFallbackFlights =
-                                details.length === 0
-                                  ? parseSectorIntoFlights(group.sector || "")
-                                  : [];
+                              const displayLegs = getDisplayFlightLegs(group);
+                              const details = displayLegs;
+                              const sectorFallbackFlights = [];
+                              const flight = displayLegs[0];
+                              const lastFlight =
+                                displayLegs[displayLegs.length - 1];
+                              const isMultiLeg = displayLegs.length > 1;
 
                               return (
                                 <tr
@@ -1839,9 +1926,11 @@ export default function AllGroupsPackages({
                                   >
                                     {isMultiLeg ? (
                                       <div className="flex flex-col">
-                                        {details.map((d, i) => {
+                                        {displayLegs.map((d, i) => {
                                           const rawDate =
-                                            d.dep_date || d.flight_date;
+                                            d.dep_date ||
+                                            d.flight_date ||
+                                            group.dept_date;
 
                                           return (
                                             <LegCell key={i} index={i}>
@@ -1866,7 +1955,9 @@ export default function AllGroupsPackages({
                                         }}
                                       >
                                         {formatDate(
-                                          flight.dep_date || flight.flight_date,
+                                          flight.dep_date ||
+                                            flight.flight_date ||
+                                            group.dept_date,
                                         )}
                                       </span>
                                     ) : (
@@ -1885,7 +1976,7 @@ export default function AllGroupsPackages({
                                   >
                                     {isMultiLeg ? (
                                       <div className="flex flex-col">
-                                        {details.map((d, i) => (
+                                        {displayLegs.map((d, i) => (
                                           <LegCell key={i} index={i}>
                                             <div className="flex flex-col truncate">
                                               <span
@@ -1949,7 +2040,7 @@ export default function AllGroupsPackages({
                                   >
                                     {isMultiLeg ? (
                                       <div className="flex flex-col">
-                                        {details.map((d, i) => (
+                                        {displayLegs.map((d, i) => (
                                           <LegCell key={i} index={i}>
                                             <div className="w-full flex justify-center">
                                               <SectorRoute
@@ -2144,7 +2235,7 @@ export default function AllGroupsPackages({
                                     )}
                                   </td>
 
-                                  {hasMultiLeg && (
+                                  {false && hasMultiLeg && (
                                     <td
                                       className="text-center align-middle"
                                       style={{

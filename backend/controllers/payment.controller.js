@@ -1109,7 +1109,7 @@ export const exportLedgerPDF = async (req, res) => {
 
     // Add company logo (left side)
     try {
-      const logoPath = path.join(__dirname, "..", "assests", "logosiraj.png");
+      const logoPath = path.join(__dirname, "..", "assests", "logosirajjj.png");
       doc.image(logoPath, 50, 65, { width: 100, height: 100 });
     } catch (err) {
       console.error("Logo error:", err);

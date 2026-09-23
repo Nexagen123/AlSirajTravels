@@ -247,6 +247,7 @@ const bookingSchema = new mongoose.Schema(
         "skypass",
         "fz-pakistan",
         "ammer-milat",
+        "al-ayyan",
       ],
     },
 
@@ -375,6 +376,17 @@ const bookingSchema = new mongoose.Schema(
     ammerMilatErrorMessage: {
       type: String,
       default: null,
+    },
+
+    // Al Ayyan API — booking creation on their side
+    alAyyanBookingId: {
+      type: String,
+      default: null,
+    },
+    alAyyanBookingStatus: {
+      type: String,
+      enum: ["pending", "success", "failed", "not_applicable"],
+      default: "not_applicable",
     },
     ammerMilatResponse: {
       type: mongoose.Schema.Types.Mixed,
