@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!user) return;
 
-    const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 minutes
+    const INACTIVITY_LIMIT = 25 * 60 * 1000; // 15 minutes
     let timer: ReturnType<typeof setTimeout>;
 
     const resetTimer = () => {

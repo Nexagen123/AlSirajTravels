@@ -8,7 +8,7 @@ import '@fontsource/roboto/700.css'; // Bold
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 
-const INACTIVITY_LIMIT = 15 * 60 * 1000; // 15 minutes
+const INACTIVITY_LIMIT = 25 * 60 * 1000; // 15 minutes
 
 function InactivityLogout({ children }) {
     useEffect(() => {
