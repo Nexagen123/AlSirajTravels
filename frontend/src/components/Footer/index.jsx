@@ -14,20 +14,24 @@ import { Link } from "react-router-dom";
 import { Globe } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/+923006666344";
+const toWhatsappUrl = (phone) => `https://wa.me/${phone}`;
 
 const quickLinks = [
-  { label: "Home", href: "/" },
-  { label: "Group Tickets", href: "/all-groups" },
-  { label: "Umrah Packages", href: "/all-groups?group_type=UMRAH GROUP" },
+  { label: "Home", guestHref: "/auth/login", userHref: "/dashboard" },
+  { label: "Group Tickets", guestHref: "/auth/login", userHref: "/dashboard/groups" },
+  { label: "Umrah Packages", guestHref: "/auth/login", userHref: "/dashboard/all-groups" },
 ];
 const topPackages = [
-  "Umrah Groups",
-  "UAE Groups",
-  "KSA Groups",
-  "Visa Consultancy",
+  { label: "Umrah Groups", guestHref: "/auth/login", userHref: "/dashboard/groups?type_filter=umrah" },
+  { label: "UAE Groups", guestHref: "/auth/login", userHref: "/dashboard/groups?type_filter=uae" },
+  { label: "KSA Groups", guestHref: "/auth/login", userHref: "/dashboard/groups?type_filter=ksa" },
+  { label: "Oman Group", guestHref: "/auth/login", userHref: "/dashboard/groups?type_filter=oman" },
 ];
 
 export default function Footer({ user }) {
+  const isLoggedIn = !!user?._id || !!localStorage.getItem("frontend_token");
+  const getFooterHref = (item) => (isLoggedIn ? item.userHref : item.guestHref);
+
   return (
     <>
       {/* --- TOP CTA: ACTION ZONE --- */}
@@ -138,7 +142,7 @@ export default function Footer({ user }) {
                 {quickLinks.map((item) => (
                   <li key={item.label}>
                     <Link
-                      to={item.href}
+                      to={getFooterHref(item)}
                       className="text-white/60 hover:text-white transition-colors text-xs font-medium flex items-center gap-2 group"
                     >
                       <ChevronTinyRight />
@@ -158,12 +162,14 @@ export default function Footer({ user }) {
               </h3>
               <ul className="space-y-3.5 text-xs font-medium text-white/60">
                 {topPackages.map((item) => (
-                  <li
-                    key={item}
-                    className="hover:text-white cursor-pointer transition-colors flex items-center gap-2"
-                  >
-                    <span className="w-1 h-1 bg-(--clay-gold-light) rounded-full" />
-                    {item}
+                  <li key={item.label}>
+                    <Link
+                      to={getFooterHref(item)}
+                      className="hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                    >
+                      <span className="w-1 h-1 bg-(--clay-gold-light) rounded-full" />
+                      {item.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -204,20 +210,24 @@ export default function Footer({ user }) {
                   <span className="text-xs font-medium">0306-6001334</span>
                 </a> */}
                 <a
-                  href="tel:+9203000802965"
+                  href={toWhatsappUrl("923000802965")}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors"
                 >
                   <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
-                    <FaPhoneAlt size={12} />
+                    <FaWhatsapp size={13} />
                   </div>
                   <span className="text-xs font-medium">0300-0802965</span>
                 </a>
                 <a
-                  href="tel:+9203000802963"
+                  href={toWhatsappUrl("923000802963")}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors"
                 >
                   <div className="clay-glass-light w-8 h-8 rounded-lg! flex items-center justify-center shrink-0">
-                    <FaPhoneAlt size={12} />
+                    <FaWhatsapp size={13} />
                   </div>
                   <span className="text-xs font-medium">0300-0802963</span>
                 </a>

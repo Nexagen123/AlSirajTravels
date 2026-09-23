@@ -32,7 +32,7 @@ const normalizeGroupId = (groupId) => groupId?.toString();
 const Qafla_e_Sagir_BOOKING_CONTACT = {
   agentName: "New Al Siraj",
   agencyName: "New Al Siraj",
-  email: "newalsiraj1334@gmail.com",
+  email: "alsirajtravelspk13@gmail.com",
   mobile: "0306-6001334",
 };
 

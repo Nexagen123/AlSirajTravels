@@ -11,10 +11,10 @@ import ukImg from "../../assets/images/uk.webp";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Group Tickets", href: "/all-groups" },
-  { label: "Umrah Packages", href: "/all-groups?group_type=UMRAH GROUP" },
-  { label: "Visa", href: "/auth/register" },
-  { label: "Contact", href: "#contact" },
+  { label: "Group Tickets", href: "/auth/login" },
+  { label: "Umrah Packages", href: "/auth/login" },
+  // { label: "Visa", href: "/auth/register" },
+  { label: "Contact", href: "#contact", isAnchor: true },
 ];
 
 const heroGroups = [
@@ -103,19 +103,23 @@ export default function HeroSection() {
               </Link>
 
               <nav className="hidden lg:flex items-center gap-7">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    className={`text-sm font-bold transition-colors ${
+                {navLinks.map((link) => {
+                  const className = `text-sm font-bold transition-colors ${
                       scrolled
                         ? "text-(--siraj-ink) hover:text-(--siraj-blue)"
                         : "text-white/90 hover:text-(--siraj-gold-light)"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                    }`;
+
+                  return link.isAnchor ? (
+                    <a key={link.label} href={link.href} className={className}>
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link key={link.label} to={link.href} className={className}>
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </nav>
 
               <div className="hidden md:flex items-center gap-3">
@@ -151,20 +155,33 @@ export default function HeroSection() {
 
             {navOpen && (
               <div className="lg:hidden px-5 pb-5 flex flex-col gap-3">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    onClick={() => setNavOpen(false)}
-                    className={`py-2 border-b text-sm font-bold ${
+                {navLinks.map((link) => {
+                  const className = `py-2 border-b text-sm font-bold ${
                       scrolled
                         ? "text-(--siraj-ink) border-slate-100"
                         : "text-white border-white/10"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                    }`;
+
+                  return link.isAnchor ? (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      onClick={() => setNavOpen(false)}
+                      className={className}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.label}
+                      to={link.href}
+                      onClick={() => setNavOpen(false)}
+                      className={className}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
                 <div className="grid grid-cols-2 gap-3 pt-2">
                   <Link to="/auth/login" className="text-center rounded-full bg-white/15 py-2.5 text-sm font-bold text-white">
                     Login

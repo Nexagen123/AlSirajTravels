@@ -673,7 +673,7 @@ const Ledger = () => {
               <div className="agent-ledger-print-company-text">
                 <strong>{accountName.toUpperCase()}</strong>
                 <div>New Al Siraj Travels</div>
-                <div>Email: newalsiraj1334@gmail.com</div>
+                <div>Email: alsirajtravelspk13@gmail.com</div>
                 <div>Account statement generated from New Al Siraj portal</div>
               </div>
             </div>
@@ -852,7 +852,7 @@ const Ledger = () => {
               <div>
                 <h1>{accountName.toUpperCase()}</h1>
                 <p>New Al Siraj Travels</p>
-                <p>Email: newalsiraj1334@gmail.com</p>
+                <p>Email: alsirajtravelspk13@gmail.com</p>
                 <p>Account statement generated from New Al Siraj portal</p>
               </div>
             </div>
