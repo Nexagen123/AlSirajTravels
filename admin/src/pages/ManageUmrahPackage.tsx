@@ -949,7 +949,7 @@ const ManageUmrahPackage = () => {
 
   const localCount = packages.filter((p) => p.packageSource === "local-db" || !p.packageSource).length;
   const fzCount = packages.filter((p) => p.packageSource === "fz-pakistan").length;
-  const fullUmrahCount = packages.filter((p) => p.packageSource === "full-umrah-package").length;
+  // const fullUmrahCount = packages.filter((p) => p.packageSource === "full-umrah-package").length;
   const alAyyanCount = packages.filter((p) => p.packageSource === "al-ayyan").length;
   const visibilityPackages =
     activeTab === "fullUmrah"
