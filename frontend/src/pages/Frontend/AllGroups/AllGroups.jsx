@@ -664,6 +664,19 @@ export default function AllGroupsPackages({
     return value?.substring(0, 5) || "—";
   };
 
+  const formatDateShort = (value) => {
+    if (!value) return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return "—";
+
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+    });
+  };
+
   const calculatePriceAfterMargin = (groupPrice, group = {}) => {
     if (user?.priceOnCall) return null;
 
@@ -1492,6 +1505,106 @@ export default function AllGroupsPackages({
     );
   };
 
+  /* ---------- Compact single-line-per-flight row used on narrow (<sm)
+  screens instead of the horizontally-scrolling table, so every flight's
+  date/number/route/fare stays visible without swiping sideways. ---------- */
+  const MobileFlightRow = ({ group, isLast }) => {
+    const displayLegs = getDisplayFlightLegs(group);
+    const price = calculatePriceAfterMargin(group.price, group);
+
+    return (
+      <div
+        className="px-2.5 py-2"
+        style={{
+          borderBottom: isLast ? "none" : `1px solid ${theme.colors.border}`,
+        }}
+      >
+        <div className="space-y-1">
+          {displayLegs.map((leg, i) => {
+            const legOrigin = toDisplayIATA(leg.origin);
+            const legDest = toDisplayIATA(leg.destination);
+            const depTime = formatTime(leg.dept_time || leg.dep_time);
+            const rawDate = leg.dep_date || leg.flight_date || group.dept_date;
+            const isLastLeg = i === displayLegs.length - 1;
+
+            return (
+              <div
+                key={i}
+                className="flex flex-nowrap items-center gap-1 text-[10px] leading-none overflow-hidden"
+                style={{ color: theme.colors.textSecondary, minHeight: "22px" }}
+              >
+                <span
+                  className="font-bold shrink-0"
+                  style={{ color: theme.colors.textPrimary }}
+                >
+                  {formatDateShort(rawDate)}
+                </span>
+                <span
+                  className="font-bold shrink-0"
+                  style={{ color: theme.colors.textPrimary }}
+                >
+                  {(leg.flight_no || leg.flightNo || "—").toUpperCase()}
+                </span>
+                <span
+                  className="inline-flex items-center gap-0.5 font-bold shrink-0"
+                  style={{ color: "var(--clay-navy)" }}
+                >
+                  {legOrigin || "—"}
+                  <ArrowRight
+                    size={8}
+                    style={{ color: theme.colors.textTertiary }}
+                  />
+                  {legDest || "—"}
+                </span>
+                <span className="shrink-0">{depTime}</span>
+
+                {isLastLeg && (
+                  <div className="flex items-center gap-1.5 ml-auto shrink-0 pl-1">
+                    <span
+                      className="text-xs font-bold whitespace-nowrap"
+                      style={{ color: theme.colors.textPrimary }}
+                    >
+                      {user?.priceOnCall
+                        ? "On Call"
+                        : `PKR ${price?.toLocaleString()}`}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => handleBookNow(group)}
+                      disabled={!user?.showHideButton}
+                      className="clay-btn flex items-center justify-center gap-1 whitespace-nowrap leading-none shrink-0"
+                      style={{
+                        height: "22px",
+                        fontSize: "9px",
+                        fontWeight: 700,
+                        letterSpacing: "0.2px",
+                        borderRadius: "999px",
+                        padding: "0 8px",
+                        background: user?.showHideButton
+                          ? "linear-gradient(135deg, #ffd166 0%, #eab022 55%, #dd9a10 100%)"
+                          : theme.colors.border,
+                        color: user?.showHideButton
+                          ? "var(--clay-navy-dark)"
+                          : theme.colors.textTertiary,
+                        cursor: user?.showHideButton
+                          ? "pointer"
+                          : "not-allowed",
+                      }}
+                    >
+                      <Ticket size={10} className="shrink-0" />
+                      <span>Book</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <TopBar title={"Group Tickets"} />
@@ -1716,6 +1829,15 @@ export default function AllGroupsPackages({
                   (g) => getDisplayFlightLegs(g).length > 1,
                 );
 
+                const sortedGroups = [...data.groups].sort((a, b) => {
+                  const dateDiff =
+                    new Date(a.dept_date) - new Date(b.dept_date);
+
+                  if (dateDiff !== 0) return dateDiff;
+
+                  return (Number(a.price) || 0) - (Number(b.price) || 0);
+                });
+
                 return (
                   <div key={key} className="clay-white overflow-hidden">
                     {/* Carrier header — navy gradient with dot-grid texture */}
@@ -1771,8 +1893,8 @@ export default function AllGroupsPackages({
                       </div>
                     </div>
 
-                    {/* Responsive: scrolls horizontally on narrow screens instead of squashing columns; table keeps a sane minimum width so every column stays legible */}
-                    <div className="overflow-x-auto w-full">
+                    {/* Full table on sm+ screens (scrolls horizontally there if a screen is unusually narrow); replaced below <sm by a single-line-per-flight card list so phones never need to swipe sideways */}
+                    <div className="overflow-x-auto w-full hidden sm:block">
                       <table className="w-full table-fixed border-collapse min-w-170">
                         <thead>
                           <tr
@@ -1873,18 +1995,7 @@ export default function AllGroupsPackages({
                         </thead>
 
                         <tbody>
-                          {[...data.groups]
-                            .sort((a, b) => {
-                              const dateDiff =
-                                new Date(a.dept_date) - new Date(b.dept_date);
-
-                              if (dateDiff !== 0) return dateDiff;
-
-                              return (
-                                (Number(a.price) || 0) - (Number(b.price) || 0)
-                              );
-                            })
-                            .map((group, rowIdx) => {
+                          {sortedGroups.map((group, rowIdx) => {
                               const seatCount = getSeatCount(group);
                               const displayLegs = getDisplayFlightLegs(group);
                               const details = displayLegs;
@@ -2359,6 +2470,17 @@ export default function AllGroupsPackages({
                             })}
                         </tbody>
                       </table>
+                    </div>
+
+                    {/* <sm: compact single-line-per-flight cards, no horizontal scroll */}
+                    <div className="sm:hidden">
+                      {sortedGroups.map((group, idx) => (
+                        <MobileFlightRow
+                          key={group.id || group._id}
+                          group={group}
+                          isLast={idx === sortedGroups.length - 1}
+                        />
+                      ))}
                     </div>
                   </div>
                 );
