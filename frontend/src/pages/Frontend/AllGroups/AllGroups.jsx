@@ -1508,98 +1508,187 @@ export default function AllGroupsPackages({
   /* ---------- Compact single-line-per-flight row used on narrow (<sm)
   screens instead of the horizontally-scrolling table, so every flight's
   date/number/route/fare stays visible without swiping sideways. ---------- */
+  const mobileFlightGridStyle = {
+    gridTemplateColumns:
+      "2.45rem 2.7rem minmax(3.7rem, 1fr) 2.35rem 1.55rem 4.45rem",
+  };
+
+  const formatMobileBaggage = (value) => {
+    if (!value) return "—";
+
+    const baggage = String(value).trim();
+    if (!baggage) return "—";
+
+    return /kg|pc|piece|pieces|\+$/i.test(baggage) ? baggage : `${baggage}KG`;
+  };
+
+  const MobileTableHeader = () => (
+    <div
+      className="grid items-center gap-0.5 px-2 py-1.5 text-[9px] font-bold uppercase"
+      style={{
+        ...mobileFlightGridStyle,
+        background: "var(--clay-bg)",
+        color: "var(--clay-navy)",
+        borderBottom: "1px solid rgba(22, 59, 115, 0.12)",
+      }}
+    >
+      <span className="truncate">Date</span>
+      <span className="truncate">Flight</span>
+      <span className="truncate text-center">Sector</span>
+      <span className="truncate text-center">Bag</span>
+      <span className="truncate text-center">Meal</span>
+      <span className="truncate text-right">Fare</span>
+    </div>
+  );
+
   const MobileFlightRow = ({ group, isLast }) => {
     const displayLegs = getDisplayFlightLegs(group);
     const price = calculatePriceAfterMargin(group.price, group);
+    const mobileLegs = displayLegs.map((leg) => ({
+      date: leg.dep_date || leg.flight_date || group.dept_date,
+      flightNo: leg.flight_no || leg.flightNo,
+      origin: toDisplayIATA(leg.origin),
+      destination: toDisplayIATA(leg.destination),
+      depTime: formatTime(leg.dept_time || leg.dep_time),
+      baggage: formatMobileBaggage(leg.baggage),
+      hasMeal: leg.meal && leg.meal !== "No",
+    }));
+
+    const MobileLegStack = ({ children, align = "items-start" }) => (
+      <div className={`min-w-0 flex flex-col justify-center ${align}`}>
+        {children}
+      </div>
+    );
 
     return (
       <div
-        className="px-2.5 py-2"
+        className="px-2 py-2"
         style={{
           borderBottom: isLast ? "none" : `1px solid ${theme.colors.border}`,
         }}
       >
-        <div className="space-y-1">
-          {displayLegs.map((leg, i) => {
-            const legOrigin = toDisplayIATA(leg.origin);
-            const legDest = toDisplayIATA(leg.destination);
-            const depTime = formatTime(leg.dept_time || leg.dep_time);
-            const rawDate = leg.dep_date || leg.flight_date || group.dept_date;
-            const isLastLeg = i === displayLegs.length - 1;
+        <div
+          className="grid items-stretch gap-0.5 text-[9px] leading-tight overflow-hidden"
+          style={{
+            ...mobileFlightGridStyle,
+            color: theme.colors.textSecondary,
+            minHeight: mobileLegs.length > 1 ? "56px" : "30px",
+          }}
+        >
+          <MobileLegStack>
+            {mobileLegs.map((leg, i) => (
+              <span
+                key={i}
+                className="flex h-7 min-w-0 items-center truncate font-bold"
+                style={{
+                  color: theme.colors.textPrimary,
+                }}
+              >
+                {formatDateShort(leg.date)}
+              </span>
+            ))}
+          </MobileLegStack>
 
-            return (
+          <MobileLegStack>
+            {mobileLegs.map((leg, i) => (
+              <span
+                key={i}
+                className="flex h-7 min-w-0 items-center truncate font-bold"
+                style={{ color: theme.colors.textPrimary }}
+              >
+                {(leg.flightNo || "—").toUpperCase()}
+              </span>
+            ))}
+          </MobileLegStack>
+
+          <MobileLegStack align="items-center">
+            {mobileLegs.map((leg, i) => (
               <div
                 key={i}
-                className="flex flex-nowrap items-center gap-1 text-[10px] leading-none overflow-hidden"
-                style={{ color: theme.colors.textSecondary, minHeight: "22px" }}
+                className="flex h-7 min-w-0 flex-col items-center justify-center text-center"
               >
                 <span
-                  className="font-bold shrink-0"
-                  style={{ color: theme.colors.textPrimary }}
-                >
-                  {formatDateShort(rawDate)}
-                </span>
-                <span
-                  className="font-bold shrink-0"
-                  style={{ color: theme.colors.textPrimary }}
-                >
-                  {(leg.flight_no || leg.flightNo || "—").toUpperCase()}
-                </span>
-                <span
-                  className="inline-flex items-center gap-0.5 font-bold shrink-0"
+                  className="inline-flex max-w-full items-center justify-center gap-0.5 font-bold"
                   style={{ color: "var(--clay-navy)" }}
                 >
-                  {legOrigin || "—"}
+                  <span className="truncate">{leg.origin || "—"}</span>
                   <ArrowRight
                     size={8}
+                    className="shrink-0"
                     style={{ color: theme.colors.textTertiary }}
                   />
-                  {legDest || "—"}
+                  <span className="truncate">{leg.destination || "—"}</span>
                 </span>
-                <span className="shrink-0">{depTime}</span>
-
-                {isLastLeg && (
-                  <div className="flex items-center gap-1.5 ml-auto shrink-0 pl-1">
-                    <span
-                      className="text-xs font-bold whitespace-nowrap"
-                      style={{ color: theme.colors.textPrimary }}
-                    >
-                      {user?.priceOnCall
-                        ? "On Call"
-                        : `PKR ${price?.toLocaleString()}`}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => handleBookNow(group)}
-                      disabled={!user?.showHideButton}
-                      className="clay-btn flex items-center justify-center gap-1 whitespace-nowrap leading-none shrink-0"
-                      style={{
-                        height: "22px",
-                        fontSize: "9px",
-                        fontWeight: 700,
-                        letterSpacing: "0.2px",
-                        borderRadius: "999px",
-                        padding: "0 8px",
-                        background: user?.showHideButton
-                          ? "linear-gradient(135deg, #ffd166 0%, #eab022 55%, #dd9a10 100%)"
-                          : theme.colors.border,
-                        color: user?.showHideButton
-                          ? "var(--clay-navy-dark)"
-                          : theme.colors.textTertiary,
-                        cursor: user?.showHideButton
-                          ? "pointer"
-                          : "not-allowed",
-                      }}
-                    >
-                      <Ticket size={10} className="shrink-0" />
-                      <span>Book</span>
-                    </button>
-                  </div>
-                )}
+                <span
+                  className="block truncate text-[8px] font-medium"
+                  style={{ color: theme.colors.textTertiary }}
+                >
+                  {leg.depTime}
+                </span>
               </div>
-            );
-          })}
+            ))}
+          </MobileLegStack>
+
+          <MobileLegStack align="items-center">
+            {mobileLegs.map((leg, i) => (
+              <span
+                key={i}
+                className="flex h-7 min-w-0 items-center whitespace-nowrap text-center text-[8px]"
+              >
+                {leg.baggage}
+              </span>
+            ))}
+          </MobileLegStack>
+
+          <MobileLegStack align="items-center">
+            {mobileLegs.map((leg, i) => (
+              <span
+                key={i}
+                className="flex h-7 min-w-0 items-center truncate text-center font-semibold"
+                style={{
+                  color: leg.hasMeal
+                    ? theme.colors.textSecondary
+                    : theme.colors.textTertiary,
+                }}
+              >
+                {leg.hasMeal ? "Yes" : "No"}
+              </span>
+            ))}
+          </MobileLegStack>
+
+          <div className="min-w-0 flex h-full flex-col items-end justify-center gap-1">
+            <span
+              className="text-[9px] font-bold leading-none text-right whitespace-nowrap"
+              style={{ color: theme.colors.textPrimary }}
+            >
+              {user?.priceOnCall ? "On Call" : `${price?.toLocaleString()} PKR`}
+            </span>
+
+            <button
+              type="button"
+              onClick={() => handleBookNow(group)}
+              disabled={!user?.showHideButton}
+              className="clay-btn flex w-full items-center justify-center gap-0.5 whitespace-nowrap leading-none"
+              style={{
+                height: "17px",
+                fontSize: "8px",
+                fontWeight: 700,
+                letterSpacing: "0.2px",
+                borderRadius: "999px",
+                padding: "0 4px",
+                background: user?.showHideButton
+                  ? "linear-gradient(135deg, #ffd166 0%, #eab022 55%, #dd9a10 100%)"
+                  : theme.colors.border,
+                color: user?.showHideButton
+                  ? "var(--clay-navy-dark)"
+                  : theme.colors.textTertiary,
+                cursor: user?.showHideButton ? "pointer" : "not-allowed",
+              }}
+            >
+              <Ticket size={8} className="shrink-0" />
+              <span>Book</span>
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -2474,6 +2563,7 @@ export default function AllGroupsPackages({
 
                     {/* <sm: compact single-line-per-flight cards, no horizontal scroll */}
                     <div className="sm:hidden">
+                      <MobileTableHeader />
                       {sortedGroups.map((group, idx) => (
                         <MobileFlightRow
                           key={group.id || group._id}
