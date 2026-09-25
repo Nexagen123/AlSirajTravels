@@ -353,7 +353,7 @@ const trimTime = (time: string): string => {
 
 // ─── Build Copy Text for a Single Group ──────────────────────────────────────
 
-const buildGroupCopyText = (group: ApiGroup): string => {
+const buildGroupCopyText = (group: ApiGroup, displayPrice?: number): string => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -365,7 +365,7 @@ const buildGroupCopyText = (group: ApiGroup): string => {
         return "";
     }
 
-    const price = Number(group.price || 0);
+    const price = Number(displayPrice ?? group.price ?? 0);
 
     if (Array.isArray(group.details) && group.details.length > 0) {
         group.details.forEach((d: any, index: number) => {
@@ -434,11 +434,19 @@ Website: https://newalsiraj.com/`;
 
 // ─── Copy Button Component ──────────────────────────────────────────────────
 
-const CopyButton = memo(({ group, className = "" }: { group: ApiGroup; className?: string }) => {
+const CopyButton = memo(({
+    group,
+    displayPrice,
+    className = "",
+}: {
+    group: ApiGroup;
+    displayPrice?: number;
+    className?: string;
+}) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = useCallback(async () => {
-        const text = buildGroupCopyText(group);
+        const text = buildGroupCopyText(group, displayPrice);
         if (!text) {
             toast.warning("No valid flights to copy");
             return;
@@ -453,7 +461,7 @@ const CopyButton = memo(({ group, className = "" }: { group: ApiGroup; className
             console.error("Copy failed:", err);
             toast.error("Failed to copy");
         }
-    }, [group]);
+    }, [group, displayPrice]);
 
     return (
         <button
@@ -1471,7 +1479,7 @@ export default function ApiGroups() {
 
                                                                 {/* ─── Copy Button ─────────────────────────────────── */}
                                                                 <td className="px-4 py-3 text-center">
-                                                                    <CopyButton group={group} />
+                                                                    <CopyButton group={group} displayPrice={finalPrice} />
                                                                 </td>
                                                             </tr>
                                                         );
