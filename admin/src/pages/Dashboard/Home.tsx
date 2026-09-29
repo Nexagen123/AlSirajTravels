@@ -26,6 +26,18 @@ interface UnifiedGroup {
   pnr: string;
 }
 
+type MarginConfig = {
+  value: number;
+  type: "percent" | "amount";
+};
+
+type PricingRule = {
+  scope: "provider" | "sector" | "group";
+  key: string;
+  isHidden: boolean;
+  margin: number;
+};
+
 const MONTHS_TITLE = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -78,7 +90,53 @@ function extractIATA(terminal: string): string {
   return match ? match[1] : terminal.trim();
 }
 
-function buildCopyText(groups: UnifiedGroup[]): string {
+function getCopyPrice(
+  group: any,
+  options: {
+    margin?: MarginConfig | null;
+    pricingRules?: PricingRule[];
+    applyPricingRules?: boolean;
+  } = {},
+): number | null {
+  let price = Number(group.price || 0);
+  const providerKey = group.source || "admin";
+
+  if (options.applyPricingRules) {
+    const rules = options.pricingRules || [];
+    const groupKey = `${providerKey}:${group.id}`;
+    const providerRule = rules.find((r) => r.scope === "provider" && r.key === providerKey);
+    const sectorRule = rules.find((r) => r.scope === "sector" && r.key === group.sector);
+    const groupRule = rules.find((r) => r.scope === "group" && r.key === groupKey);
+
+    if (providerRule?.isHidden || sectorRule?.isHidden || groupRule?.isHidden) {
+      return null;
+    }
+
+    price += (providerRule?.margin || 0) + (sectorRule?.margin || 0) + (groupRule?.margin || 0);
+  }
+
+  if (group.individualMargin !== null && group.individualMargin !== undefined) {
+    price += Number(group.individualMargin) || 0;
+  } else if (options.margin && Number(options.margin.value) > 0) {
+    const marginValue = Number(options.margin.value) || 0;
+    if (options.margin.type === "percent") {
+      price += (price * marginValue) / 100;
+    } else {
+      price += marginValue;
+    }
+  }
+
+  return Math.max(0, Math.round(price));
+}
+
+function buildCopyText(
+  groups: UnifiedGroup[],
+  options: {
+    margin?: MarginConfig | null;
+    pricingRules?: PricingRule[];
+    applyPricingRules?: boolean;
+  } = {},
+): string {
   if (!groups.length) return "";
 
   const today = new Date();
@@ -100,7 +158,8 @@ function buildCopyText(groups: UnifiedGroup[]): string {
     if (g.available_no_of_pax !== undefined && g.available_no_of_pax <= 0) return;
 
     const sector = g.sector || "UNKNOWN";
-    const price = Number(g.price || 0);
+    const price = getCopyPrice(g, options);
+    if (price === null) return;
 
     if (!sectorMap.has(sector)) {
       sectorMap.set(sector, []);
@@ -245,7 +304,9 @@ export default function Home() {
   const [marginValue, setMarginValue] = useState("");
   const [marginType, setMarginType] = useState<"percent" | "amount">("percent");
   const [isApplyingMargin, setIsApplyingMargin] = useState(false);
-  const [currentMargin, setCurrentMargin] = useState<{ value: number; type: "percent" | "amount" } | null>(null);
+  const [currentMargin, setCurrentMargin] = useState<MarginConfig | null>(null);
+  const [pricingRules, setPricingRules] = useState<PricingRule[]>([]);
+  const [copyUsesRawPricing, setCopyUsesRawPricing] = useState(true);
 
   // ALL YOUR EXISTING FUNCTIONS - UNCHANGED
   const fetchUnifiedGroups = async () => {
@@ -253,6 +314,7 @@ export default function Home() {
       const response = await axiosInstance.get("/sector/getUnifiedGroups");
       if (response.data.success && Array.isArray(response.data.data)) {
         setUnifiedGroups(response.data.data);
+        setCopyUsesRawPricing(response.data.viewMode !== "customer-filtered");
       } else {
         console.warn("Data format matches but array not found or success is false");
       }
@@ -275,6 +337,17 @@ export default function Home() {
     }
   };
 
+  const fetchPricingRules = async () => {
+    try {
+      const response = await axiosInstance.get("/pricing-rules/");
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setPricingRules(response.data.data);
+      }
+    } catch (error: any) {
+      console.error("Error fetching pricing rules:", error);
+    }
+  };
+
   const fetchRecentBookings = async () => {
     try {
       const response = await getRecentBookings(5);
@@ -287,7 +360,11 @@ export default function Home() {
   };
 
   const handleCopyData = async () => {
-    const text = buildCopyText(unifiedGroups);
+    const text = buildCopyText(unifiedGroups, {
+      margin: currentMargin,
+      pricingRules,
+      applyPricingRules: copyUsesRawPricing,
+    });
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -321,6 +398,7 @@ export default function Home() {
 
       if (response.data.success) {
         alert(`Margin saved: ${marginValue} ${marginType === "percent" ? "%" : "Rs"}`);
+        setCurrentMargin(response.data.data);
         setIsMarginModalOpen(false);
         setMarginValue("");
         setMarginType("percent");
@@ -342,9 +420,11 @@ export default function Home() {
 
     if (hasPermission(user, "dashboard_copy_sector_data")) {
       fetchUnifiedGroups();
+      fetchMargin();
+      fetchPricingRules();
     }
 
-    if (hasPermission(user, "dashboard_apply_margin")) {
+    if (hasPermission(user, "dashboard_apply_margin") && !hasPermission(user, "dashboard_copy_sector_data")) {
       fetchMargin();
     }
 
