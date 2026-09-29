@@ -142,7 +142,7 @@ function buildCopyText(
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const header = `                *=====${String(today.getDate()).padStart(2, "0")} ${MONTHS_TITLE[today.getMonth()].toUpperCase()} UPDATES=====*`;
+  const header = `*=====${String(today.getDate()).padStart(2, "0")} ${MONTHS_TITLE[today.getMonth()].toUpperCase()} UPDATES=====*`;
 
   type SectorEntry = {
     group: any;
