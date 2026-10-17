@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { Globe } from "lucide-react";
 
-const WHATSAPP_URL = "https://wa.me/+923006666344";
+const WHATSAPP_URL = "https://wa.me/+923000802965";
 const toWhatsappUrl = (phone) => `https://wa.me/${phone}`;
 
 const quickLinks = [
